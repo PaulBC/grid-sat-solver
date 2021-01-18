@@ -35,6 +35,13 @@ clauses = inflate_grid_template(all_constraints, grid, G.name)
 # add clauses for a cardinality bound of >= 12 in first generation
 clauses.extend(bound_population(grid, GreaterThanOrEqual, 12))
 
+# optionally set boundary to 0
+'''
+for i in range(2):
+  for j in range(root.equivalence.columnsize):
+    clauses.append((~Literal('c_%d_%d_0' % (i, j)),))
+'''
+
 # write dimacs file for solver
 with open(dimacs_file, 'w') as out:
   output_dimacs(clauses, out)
