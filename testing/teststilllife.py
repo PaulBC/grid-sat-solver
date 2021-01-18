@@ -25,8 +25,8 @@ print('# done')
 
 # make CA grid
 #root = MooreGridNode((0, 0, 0), Toroidal(10, 10, 3), PeriodicTimeAdjust(1, 0, 0))
-#root = MooreGridNode((0, 0, 0), Tesselated(RotatedSquare(10)), PeriodicTimeAdjust(1, 0, 0))
-root = MooreGridNode((0, 0, 0), Tesselated(CrossSurface(10, 10)), PeriodicTimeAdjust(1, 0, 0))
+root = MooreGridNode((0, 0, 0), Tesselated(RotatedSquare(10)), PeriodicTimeAdjust(1, 0, 0))
+#root = MooreGridNode((0, 0, 0), Tesselated(CrossSurface(10, 10)), PeriodicTimeAdjust(1, 0, 0))
 grid = build_grid(root)
 
 # create clauses for life rule conditions on grid
@@ -47,5 +47,13 @@ with open(symbolic_file, 'w') as out:
 results = solve(dimacs_file, solution_file)
 valuegrid = get_value_grid('c', results)
 
-for i in range(len(valuegrid[0])):
-  print("".join(['*' if x else '.' for x in valuegrid[0][i]]))
+cells = []
+for i in range(len(valuegrid[0]) * 2):
+  row = []
+  for j in range(len(valuegrid[0][0]) * 2):
+    it, jt, _ = root.equivalence.to_equivalent(i, j)
+    row.append(valuegrid[0][it][jt])
+  cells.append(row)
+
+for i in range(len(cells)):
+  print("".join(['*' if x else '.' for x in cells[i]]))

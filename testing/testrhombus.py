@@ -77,10 +77,7 @@ for i in range(len(valuegrid[0]) * 3):
   row = []
   for j in range(len(valuegrid[0][0]) * 3):
     it, jt, label = root.equivalence.to_equivalent(i, j)
-    if label == 2:
-      row.append(adjust_back(label, valuegrid[0][it][jt]))
-    else:
-      row.append(None)
+    row.append(adjust_back(label, valuegrid[0][it][jt]))
   cells.append(row)
 draw_rhombus_cells(-200, 200, cells)
 
