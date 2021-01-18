@@ -19,8 +19,7 @@ symbolic_file = sys.argv[1] + '.sym'
 solution_file = sys.argv[1] + '.out'
 
 print('# generating clauses for tiling rule')
-# birth on zero or 2m
-birth_0 = [parse_line('G <- ~NW ~N ~E ~SE ~S ~W')]
+# birth on 2o
 birth_2o = make_rotated_clauses('G <- NW N ~E ~SE ~S ~W')
 # survival on 2m
 survive_2m_a = make_rotated_clauses('G <- O NW ~N E ~SE ~S ~W')
@@ -30,7 +29,7 @@ death_le_1 = make_rotated_clauses('~G <- ~N ~E ~SE ~S ~W')
 death_2o = make_rotated_clauses('~G <- NW N ~E ~SE ~S ~W')
 death_2p = make_rotated_clauses('~G <- NW ~N ~E SE ~S ~W')
 death_ge_3 = make_totalistic_clauses('~G <- NW N E')
-all_constraints = birth_0 + birth_2o + survive_2m_a + survive_2m_b + death_le_1 + death_2o + death_2p + death_ge_3
+all_constraints = birth_2o + survive_2m_a + survive_2m_b + death_le_1 + death_2o + death_2p + death_ge_3
 print('# done')
 
 # make CA grid
@@ -40,8 +39,8 @@ grid = build_grid(root)
 # create clauses for life rule conditions on grid
 clauses = inflate_grid_template(all_constraints, grid, G.name)
 
-# add clauses for a cardinality bound of >= 12 in first generation
-clauses.extend(bound_population(grid, GreaterThanOrEqual, 12))
+# add clauses for a cardinality bound of >= 34 in first generation
+clauses.extend(bound_population(grid, GreaterThanOrEqual, 34))
 
 # write dimacs file for solver
 with open(dimacs_file, 'w') as out:
