@@ -1,6 +1,7 @@
 import re
 from clausebuilder import Literal, ZERO
 from gridbuilder import grid_layer
+from tags import expand_tag_clauses
 
 IMPLIED_BY = '<-'
 
@@ -72,6 +73,9 @@ def output_symbolic(symbolic_clauses, out):
 
 def output_dimacs(symbolic_clauses, out):
   '''Output clauses in dimacs format.'''
+  # first expand tag clauses if any
+  symbolic_clauses = expand_tag_clauses(symbolic_clauses)
+
   variables = find_variables(symbolic_clauses)
   symbol_table = {name: ix for name, ix in zip(sorted(variables), range(1, len(variables) + 1))}
   symbolic_clauses = minimize_clauses(symbolic_clauses)

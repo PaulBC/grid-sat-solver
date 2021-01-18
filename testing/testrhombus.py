@@ -21,8 +21,6 @@ rules = [
   (~O(2), ~N(0)),
   (~O(2), ~E(1)),
   (~N(0), ~E(1)),
-# 3 is not a valid tag
-  (~O(3),)
 ]
 
 # make CA grid
@@ -40,6 +38,7 @@ max_tags = find_max(tag_clauses)
 
 print(inverse_adjust)
 
+# add some random rhombuses to insure non-trival results
 import random
 random.seed(123)
 n = rhombus.columnsize
@@ -47,16 +46,11 @@ for i in range(5):
   tag_clauses.append((Literal('c_%d_%d_0' % (random.randint(0, n - 1),
                                              random.randint(0, n - 1)))(random.randint(0,2)),))
 
-clauses = []
-for tag_clause in tag_clauses:
-  if isinstance(tag_clause, str):
-    clauses.append(tag_clause)
-  else:
-    clauses.extend(match_integers_any(tag_clause, max_tags))
+clauses = expand_tag_clauses(tag_clauses)
 
 # write dimacs file for solver
 with open(dimacs_file, 'w') as out:
-  output_dimacs(clauses, out)
+  output_dimacs(tag_clauses, out)
 
 # write symbolic form of clauses
 with open(symbolic_file, 'w') as out:

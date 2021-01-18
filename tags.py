@@ -101,3 +101,25 @@ def inverse_adjust(adjust_tag):
       tag += 1
 
   return inverse
+
+def expand_tag_clauses(clauses):
+  '''Expand any clauses with tags into bit clauses using maximum values found.'''
+  max_tags = find_max(clauses)
+  # if there are no tags, just return original clauses
+  if not max_tags:
+    return clauses
+
+  # expand tag clauses into bit clauses
+  expanded = []
+  for tag_clause in clauses:
+    if isinstance(tag_clause, str):
+      expanded.append(tag_clause)
+    else:
+      expanded.extend(match_integers_any(tag_clause, max_tags))
+
+  # set upper bound on bit representations
+  expanded.append('Setting upper bound on tags.')
+  for tag, value in sorted(max_tags.items()):
+    expanded.extend(less_than(Literal(tag), value + 1))
+
+  return expanded
