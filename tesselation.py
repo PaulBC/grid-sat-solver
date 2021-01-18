@@ -5,7 +5,7 @@ class Tesselation(object):
     self.transformations = {0: lambda i, j: (i, j)}
     self.transformations.update(self._transformations())
 
-  def is_rotated(self, i, j):
+  def is_transformed(self, i, j):
     pass
 
   def to_grid(self, i, j):
@@ -14,7 +14,7 @@ class Tesselation(object):
        # find transformed (i, j)
       it, jt = transformation(i, j)
       # if the box containing it, jt is not rotated
-      if not self.is_rotated(it // self.rowsize, jt // self.columnsize):
+      if not self.is_transformed(it // self.rowsize, jt // self.columnsize):
         # use mod function to find the coordinates inside the box
         return it % self.rowsize, jt % self.columnsize, label
 
@@ -22,7 +22,7 @@ class RotatedRhombus(Tesselation):
   def __init__(self, size):
     super(RotatedRhombus, self).__init__(size, size)
 
-  def is_rotated(self, i, j):
+  def is_transformed(self, i, j):
     return (i + j) % 3 != 0
 
   def _transformations(self):
@@ -36,7 +36,7 @@ class RotatedSquare(Tesselation):
   def __init__(self, size):
     super(RotatedSquare, self).__init__(size, size)
 
-  def is_rotated(self, i, j):
+  def is_transformed(self, i, j):
     return i % 2 != 0 or j % 2 != 0
 
   def _transformations(self):
@@ -50,7 +50,7 @@ class FlippedRectangle(Tesselation):
   def __init__(self, rowsize, columnsize):
     super(FlippedRectangle, self).__init__(rowsize, columnsize)
 
-  def is_rotated(self, i, j):
+  def is_transformed(self, i, j):
     return i % 2 != 0 or j % 2 != 0
 
   def _transformations(self):
@@ -64,7 +64,7 @@ class CrossSurface(Tesselation):
   def __init__(self, rowsize, columnsize):
     super(CrossSurface, self).__init__(rowsize, columnsize)
 
-  def is_rotated(self, i, j):
+  def is_transformed(self, i, j):
     return i % 2 != 0 or j % 2 != 0
 
   def _transformations(self):
