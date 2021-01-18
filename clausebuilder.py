@@ -45,25 +45,25 @@ class Literal(object):
 # index for generating temporary variables
 VARNUM = 0
 
-# assigns a new temporary variable
 def nextvar():
+  '''Assigns a new temporary variable.'''
   global VARNUM
   VARNUM += 1
   return Literal('{x%03x}' % VARNUM)
 
-# check if a clause is always true because it has both a literal and its negation
 def always_true(clause):
+  '''Check if a clause is always true because it has both a literal and its negation.'''
   for literal in clause:
     if ~literal in clause:
       return True
   return False
 
-# combine clauses with OR just by taking a union of terms
 def or_clauses(clause1, clause2):
+  '''Combine clauses with OR just by taking a union of terms.'''
   return set(clause1).union(clause2)
 
-# expand a disjunction of two list of clauses, ignoring clauses that are always true
 def expand_disjunction(clauses1, clauses2):
+  '''Expand a disjunction of two list of clauses, ignoring clauses that are always true.'''
   expanded = set()
   for clause1 in clauses1:
     for clause2 in clauses2:
@@ -72,8 +72,8 @@ def expand_disjunction(clauses1, clauses2):
          expanded.add(tuple(sorted(combined)))
   return expanded
 
-# remove redundant (less restrictive) disjunctions from the list of clauses
 def remove_redundant(clauses):
+  '''Remove redundant (less restrictive) disjunctions from the list of clauses.'''
   minimal = []
   for clause in clauses:
     clauseset = set(clause)
@@ -88,19 +88,19 @@ def remove_redundant(clauses):
       minimal.append(clause)
   return minimal
 
-# flatten a disjunction of clause lists into a single conjunction of clauses
 def flatten_disjunction(clause_lists):
+  '''Flatten a disjunction of clause lists into a single conjunction of clauses.'''
   res = clause_lists[0]
   for clause_list in clause_lists:
     res = remove_redundant(expand_disjunction(res, clause_list))
   return res
 
-# get all variable names from any kind of nested expression
 def collect_variables(nested):
+  '''Get all variable names from any kind of nested expression.'''
   return sorted(set(x.name for x in collect_literals(nested)))
 
-# get all literals from any kind of nested expression
 def collect_literals(nested):
+  '''Get all literals from any kind of nested expression.'''
   return sorted(collect_literals_recur(nested, set()))
 
 def collect_literals_recur(nested, variables):
@@ -111,14 +111,14 @@ def collect_literals_recur(nested, variables):
       collect_literals_recur(part, variables)
   return variables
 
-# find canonical set of clauses by expanding with all variables
 def find_canonical(clauses):
+  '''Find canonical set of clauses by expanding with all variables.'''
   for name in collect_variables(clauses):
     clauses = expand_disjunction(clauses, always_false(name))
   return clauses
 
-# find all true tuples of literals
 def find_true_tuples(clauses):
+  '''Find all true tuples of literals.'''
   # find a canonical unsatisfiable list of all clauses for variables
   names = collect_variables(clauses)
   canonical_zero = always_false(names[0])
@@ -133,23 +133,24 @@ def find_true_tuples(clauses):
       true_tuples.append(tuple(~x for x in clause))
   return true_tuples
 
-# returns a list of clauses that is always false for some variable
 def always_false(name):
+  '''Returns a list of clauses that is always false for some variable.'''
   return [(Literal(name, True),), (Literal(name, False),)]
 
 # zero that can be used as a placeholder
 ZERO = Literal('{zero}')
 
 class Cardinality(object):
+  '''Class for building cardinality constraints on variables.'''
   def build(self, variables, limit):
     network, levels = Cardinality.make_adder_network(variables)
     self.adder_clauses = Cardinality.make_adder_clauses(network, levels)
     self.constraint_clauses = tuple([~levels[i] if (limit & (1<<i)) == 0 else levels[i]]
                                     for i in range(len(levels)))
 
-  # contracts levels of the adder network by applying full adders to triples of bits on
   @staticmethod
   def contract(network, levels):
+    '''Contracts levels of the adder network by applying full adders to triples of bits on.'''
     nextlevels = {}
     for level, vars in levels.items():
       if len(vars) % 3 == 2:
@@ -164,9 +165,9 @@ class Cardinality(object):
         nextlevels.setdefault(level, []).extend(vars[len(vars) // 3 * 3:])
     return nextlevels
 
-  # makes a network by contracting the original list of variables with full adders
   @staticmethod
   def make_adder_network(variables):
+    '''Makes a network by contracting the original list of variables with full adders.'''
     levels = {0: variables}
     network = []
     max_bit = len(variables).bit_length() - 1
@@ -174,9 +175,9 @@ class Cardinality(object):
       levels = Cardinality.contract(network, levels)
     return network, [levels[i][0] for i in range(len(levels))]
 
-  # makes clauses for the full adders in the network
   @staticmethod
   def make_adder_clauses(network, levels):
+    '''Makes clauses for the full adders in the network.'''
     clauses = []
     for (out0, out1, in0, in1, in2) in network:
       clauses.append((out1, ~in0, ~in1))
@@ -198,10 +199,10 @@ class GreaterThanOrEqual(Cardinality):
   def __init__(self, variables, limit):
     self.build([~x for x in variables], len(variables) - limit)
 
-# convert literals to name value/tag pairs
 def to_pairs(literals):
+  '''Convert literals to name value/tag pairs.'''
   return tuple((literal.name, (literal.value, literal.tag)) for literal in literals)
 
-# convert name value pairs to literals
 def from_pairs(pairs):
+  '''Convert name value pairs to literals.'''
   return tuple(Literal(name, value, tag) for (name, (value, tag)) in pairs)

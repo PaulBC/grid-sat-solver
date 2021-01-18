@@ -1,5 +1,5 @@
-# convert a list of cycles into a permutation mapping
 def to_mapping(cycles):
+  '''Convert a list of cycles into a permutation mapping.'''
   permutation = {}
   for cycle in cycles:
     n = len(cycle)
@@ -7,8 +7,8 @@ def to_mapping(cycles):
       permutation[str(cycle[i])] = str(cycle[(i + 1) % n])
   return permutation
 
-# find the closure of a basis of basis applied to a labeling
 def find_closure(basis, labeling):
+  '''Find the closure of a basis of basis applied to a labeling.'''
   all_labelings = set([tuple(labeling)])
   size_was = 0
   inverses = [{v: k for k, v in permutation.items()} for permutation in basis]

@@ -147,8 +147,8 @@ class MooreGridNode(GridNode):
     return '%s%s:%s' % (self.name(),
                       ('(%s)' % self.orientation) if self.orientation else '', self.equivalence)
 
-# build a grid of cells starting with root connected by neighborhod relations
 def build_grid(node):
+  '''Build a grid of cells starting with root connected by neighborhod relations.'''
   frontier = deque([node])
   grid_nodes = set(frontier)
   while frontier:
@@ -162,6 +162,6 @@ def build_grid(node):
         frontier.append(neighbor)
   return sorted(grid_nodes, key=lambda node: node.position)
 
-# get layer of grid at generation t, not including outside cells
 def grid_layer(grid, t):
+  '''Get layer of grid at generation t, not including outside cells.'''
   return filter(lambda x:x.position[2] == t and not x.is_outside(), grid)

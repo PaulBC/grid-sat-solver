@@ -4,8 +4,8 @@ from gridbuilder import grid_layer
 
 IMPLIED_BY = '<-'
 
-# parse a line of text with symbols
 def parse_line(line):
+  '''Parse a line of text with symbols.'''
   line = line.strip()
   if not line or line.startswith('# '):
     return line[2:]
@@ -16,12 +16,12 @@ def parse_line(line):
 
   return [Literal.parse(token) for token in tokens]
 
-# check if a symbolic clause is a string comment
 def is_comment(clause):
+  '''Check if a symbolic clause is a string comment.'''
   return isinstance(clause, str)
 
-# find variables in symbolic clauses
 def find_variables(symbolic_clauses):
+  '''Find variables in symbolic clauses.'''
   variables = set()
   for clause in symbolic_clauses:
     if not is_comment(clause):
@@ -29,8 +29,8 @@ def find_variables(symbolic_clauses):
         variables.add(literal.name)
   return variables
 
-# check if clause is always true because it has both a literal and its negation
 def is_always_true(clause):
+  '''Check if clause is always true because it has both a literal and its negation.'''
   positive = set()
   negative = set()
   for literal in clause:
@@ -40,8 +40,8 @@ def is_always_true(clause):
       negative.add(literal.name)
   return len(set(positive).intersection(negative)) > 0
 
-# remove duplicate clauses, duplicate literals, and clauses that are always true.
 def minimize_clauses(symbolic_clauses):
+  '''Remove duplicate clauses, duplicate literals, and clauses that are always true.'''
   seen = set()
   res = []
   for clause in symbolic_clauses:
@@ -55,23 +55,23 @@ def minimize_clauses(symbolic_clauses):
           res.append(deduped)
   return res
 
-# read clauses in symbolic form
 def read_symbolic(inp):
+  '''Read clauses in symbolic form.'''
   symbolic_clauses = []
   for line in inp:
     symbolic_clauses.append(parse_line(line))
   return symbolic_clauses
 
-# output clauses in symbolic form
 def output_symbolic(symbolic_clauses, out):
+  '''Output clauses in symbolic form.'''
   for clause in symbolic_clauses:
     if is_comment(clause):
       out.write('# %s\n' % clause)
     else:
       out.write('%s\n' % ' '.join(map(str, clause)))
 
-# output clauses in dimacs format
 def output_dimacs(symbolic_clauses, out):
+  '''Output clauses in dimacs format.'''
   variables = find_variables(symbolic_clauses)
   symbol_table = {name: ix for name, ix in zip(sorted(variables), range(1, len(variables) + 1))}
   symbolic_clauses = minimize_clauses(symbolic_clauses)
@@ -87,16 +87,16 @@ def output_dimacs(symbolic_clauses, out):
       num_clause = [(1 if literal.value else -1) * symbol_table[literal.name] for literal in clause]
       out.write('%s 0\n' % ' '.join([str(x) for x in num_clause]))
 
-# convert clause to a string, in implication form if consequent is present
 def clause_to_string(clause, consequent):
+  '''Convert clause to a string, in implication form if consequent is present.'''
   head = list(filter(lambda x: x.name == consequent, clause))
   if head:
      clause = head + [IMPLIED_BY] + [~x for x in clause if x.name != consequent]
   return ' '.join(map(str, clause))
 
-# inflate each template clause using grid cells
 def inflate_grid_template(template_constraints, grid, consequent=None,
                           adjust_tag=lambda orientation, tag: tag):
+  '''Inflate each template clause using grid cells.'''
   def node_info(node):
     return (ZERO.name if node.is_outside() else node.name(), node.orientation)
 
@@ -128,8 +128,8 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
     clauses.append([~ZERO])
   return clauses
 
-# assign a cardinality constraint to first generation
 def bound_population(grid, comparator, size):
+  '''Assign a cardinality constraint to first generation.'''
   cardinality = comparator([Literal(node.name()) for node in grid_layer(grid, 0)], size)
   clauses = ['Population constraint %s %s' % (comparator.__name__, size)]
   clauses.extend(cardinality.adder_clauses)
@@ -139,8 +139,8 @@ def bound_population(grid, comparator, size):
 # regex for parsing comments mapping variable names to numbers
 VAR_REGEX = re.compile('^c variable ([^ ]+): ([0-9]+)')
 
-# load the results using variable comments in input and solution of SAT solver
 def load_results(input, solution):
+  '''Load the results using variable comments in input and solution of SAT solver.'''
   to_symbol = {}
   for line in input:
     m = VAR_REGEX.search(line)
@@ -165,8 +165,8 @@ def load_results(input, solution):
 
   return [(key, value) for key, value in sorted(values.items())]
 
-# return a grid of values for named variable
 def get_value_grid(name, results):
+  '''Return a grid of values for named variable.'''
   cells = []
   imax = 0
   jmax = 0

@@ -1,7 +1,7 @@
 from clausebuilder import Literal, to_pairs, from_pairs
 
-# convert a list of cycles into a permutation mapping
 def to_mapping(cycles):
+  '''Convert a list of cycles into a permutation mapping.'''
   permutation = {}
   for cycle in cycles:
     n = len(cycle)
@@ -20,8 +20,8 @@ class Labeling(object):
   def __eq__(self, other):
     return self.canonical == other.canonical
 
-# find the closure of a basis of basis applied to a labeling
 def find_closure(basis, labeling):
+  '''Find the closure of a basis of basis applied to a labeling.'''
   all_labelings = set([Labeling(labeling)])
   size_was = 0
   inverses = [{v: k for k, v in permutation.items()} for permutation in basis]
@@ -69,11 +69,11 @@ TOTALISTIC_HEX = [ROTATE_CLOCKWISE_HEX, MIX_CORNERS_SIDES]
 ROTATED_TRI_BELOW = [ROTATE_TRI_BELOW]
 ROTATED_TRI_ABOVE = [ROTATE_TRI_ABOVE]
 
-# returns a list of permutations of the given literals based on a symmetry basis
 def all_symmetries(literals, symmetry):
+  '''Returns a list of permutations of the given literals based on a symmetry basis.'''
   return [tuple(x for x in from_pairs(permuted))
           for permuted in find_closure(symmetry, to_pairs(literals))] 
 
-# wraps each literal in a list in a singleton tuple to make it a conjunction of clauses.
 def to_conjunction(literals):
+  '''Wraps each literal in a list in a singleton tuple to make it a conjunction of clauses.'''
   return [(x,) for x in literals]
