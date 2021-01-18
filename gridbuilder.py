@@ -41,6 +41,7 @@ MOORE_DISPLACEMENTS = {
 }
 
 class Toroidal(object):
+  '''An equivalence based on toroidal wrapping.'''
   def __init__(self, rowsize, columnsize, column_shift=0):
     self.rowsize = rowsize
     self.columnsize = columnsize
@@ -57,6 +58,7 @@ class Toroidal(object):
     return '%dX%dt' % (self.rowsize, self.columnsize)
 
 class Open(object):
+  '''An open grid assumed 0 outside bounds.'''
   def __init__(self, rowsize, columnsize):
     self.rowsize = rowsize
     self.columnsize = columnsize
@@ -66,6 +68,21 @@ class Open(object):
 
   def is_outside(self, i, j):
     return i < 0 or i >= self.rowsize or j < 0 or j >= self.columnsize
+
+  def __str__(self):
+    return '%dX%do' % (self.rowsize, self.columnsize)
+
+class Strip(object):
+  '''A grid wrapped on columns but open on rows.'''
+  def __init__(self, rowsize, columnsize):
+    self.rowsize = rowsize
+    self.columnsize = columnsize
+
+  def to_equivalent(self, i, j):
+    return i, j % self.columnsize, 0
+
+  def is_outside(self, i, j):
+    return i < 0 or i >= self.rowsize
 
   def __str__(self):
     return '%dX%do' % (self.rowsize, self.columnsize)
