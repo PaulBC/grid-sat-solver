@@ -40,7 +40,12 @@ max_tags = find_max(tag_clauses)
 
 print(inverse_adjust)
 
-tag_clauses.append((Literal('c_0_0_0')(2),))
+import random
+random.seed(123)
+n = rhombus.columnsize
+for i in range(5):
+  tag_clauses.append((Literal('c_%d_%d_0' % (random.randint(0, n - 1),
+                                             random.randint(0, n - 1)))(random.randint(0,2)),))
 
 clauses = []
 for tag_clause in tag_clauses:
@@ -72,9 +77,12 @@ for i in range(len(valuegrid[0]) * 3):
   row = []
   for j in range(len(valuegrid[0][0]) * 3):
     it, jt, label = root.equivalence.to_equivalent(i, j)
-    row.append(adjust_back(label, valuegrid[0][it][jt]))
+    if label == 2:
+      row.append(adjust_back(label, valuegrid[0][it][jt]))
+    else:
+      row.append(None)
   cells.append(row)
 draw_rhombus_cells(-200, 200, cells)
 
 for row in cells:
-  print(" ".join(map(str, row)))
+  print(" ".join(str(x) if x is not None else '.' for x in row))

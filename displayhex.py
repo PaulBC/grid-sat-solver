@@ -85,6 +85,7 @@ def draw_rhombus_cells(xorigin, yorigin, cells):
   turtle.setposition(xorigin, yorigin)
   for i in range(len(cells)):
     for j in range(len(cells[i])):
-      rhombus_cell(i, j, cells[i][j])
-  #pop_state()
+      if cells[i][j] is not None:
+        rhombus_cell(i, j, cells[i][j])
+  pop_state()
   turtle.update()
