@@ -29,7 +29,7 @@ Right now, I am more interested in laying out tiles with symmetries, hence my fo
 to implement.
 
 I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
-thus far. I may add one time permitting
+thus far. I may add one time permitting.
 
 ## Quick start
 
