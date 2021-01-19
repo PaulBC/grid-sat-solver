@@ -1,0 +1,18 @@
+# Boolean SAT example.
+# Positive clauses require at least one literal to be true.
+a b c 
+d e f j
+a c f  
+g h a i
+b c h 
+
+# But some pairs are incompatible (must not both be true).
+~a ~b
+~a ~e
+~a ~h
+~a ~i
+~b ~h
+~e ~f
+~f ~j
+~g ~h
+~i ~j

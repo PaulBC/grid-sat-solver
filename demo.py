@@ -80,7 +80,7 @@ wait_for_enter()
 HEX_CONSTRAINTS = expand_symmetry(ROTATED_HEX, parse_lines(HEX_ROTATED_TEMPLATE))
 HEX_CONSTRAINTS.extend(expand_symmetry(TOTALISTIC_HEX, parse_lines(HEX_TOTALISTIC_TEMPLATE)))
 
-run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -250, 350)
+run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -200, 350)
 wait_for_enter()
 
 RHOMBUS_TEMPLATE = '''
@@ -98,6 +98,20 @@ wait_for_enter()
 RHOMBUS_CONSTRAINTS = parse_lines(RHOMBUS_TEMPLATE)
 
 run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), 50, 0)
+wait_for_enter()
+
+print('Solving ad hoc SAT file on boolean literals.')
+file = 'example/boolean_sat.sym'
+tmpfile = file.replace('example', 'data')
+copyfile(file, tmpfile)
+print('Input file is %s, which contains:' % file)
+with open(file) as inp:
+  for line in inp:
+    print(line.rstrip())
+wait_for_enter()
+
+print('Solve using "python -m gridsat runsolver %s"' % file)
+solve_and_print(tmpfile)
 wait_for_enter()
 
 print('Solving ad hoc SAT file on literal with tags')
