@@ -4,6 +4,7 @@ from shutil import copyfile
 from example.hextile import run_hextile
 from example.p3ss import run_p3ss
 from example.rhombus import run_rhombus
+from example.p2patch import run_p2patch
 from example.stilllife import run_stilllife
 
 from gridsat.dimacs_sat import parse_lines
@@ -52,6 +53,18 @@ wait_for_enter()
 
 print('Setting up search for p3 spaceship.')
 run_p3ss('data/p3ss', LIFE_CONSTRAINTS)
+wait_for_enter()
+
+FLIP_FLOP_TEMPLATE = '''
+# no two consecutive live generations
+  ~G ~O
+'''
+
+print('Adding template for "phoenix" period-2 patch')
+print(FLIP_FLOP_TEMPLATE)
+wait_for_enter()
+run_p2patch('data/p2patch', LIFE_CONSTRAINTS + parse_lines(FLIP_FLOP_TEMPLATE),
+            Tesselated(RotatedSquare(12)))
 wait_for_enter()
 
 HEX_ROTATED_TEMPLATE = '''

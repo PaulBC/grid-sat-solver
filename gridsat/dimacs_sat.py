@@ -138,9 +138,9 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
     clauses.append([~ZERO])
   return clauses
 
-def bound_population(grid, comparator, size):
-  '''Assign a cardinality constraint to first generation.'''
-  cardinality = comparator([Literal(node.name()) for node in grid_layer(grid, 0)], size)
+def bound_population(grid, comparator, size, generation=0):
+  '''Assign a cardinality constraint to a generation (default first).'''
+  cardinality = comparator([Literal(node.name()) for node in grid_layer(grid, generation)], size)
   clauses = ['Population constraint %s %s' % (comparator.__name__, size)]
   clauses.extend(cardinality.adder_clauses)
   clauses.extend(cardinality.constraint_clauses)
