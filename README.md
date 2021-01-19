@@ -19,9 +19,9 @@ providing a more human-readable specification API that includes:
 - Minimally supported boolean logic for expanding disjunctions into conjunctions of clauses.
 
 ### Features not implemented yet, but nice to have.
-- Simple way to require equality between grid cells (e.g. by adding clauses). E.g. could enforce still-life behavior on
-  part of a Life pattern.
-- Set grid cell values in initial generation or later.
+- Simple way to require equality between grid cells (and generate clauses). E.g. this could enforce still-life
+  behavior on  part of a Life pattern.
+- Set grid cell values in initial generation or later (using single-literal clauses).
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
 
 Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
