@@ -128,3 +128,6 @@ wait_for_enter()
 
 print('Solve using "python -m gridsat runsolver %s"' % file)
 solve_and_print(tmpfile)
+
+print()
+print('Demo is complete. See data/ directory for generated files.')
