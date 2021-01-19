@@ -22,7 +22,7 @@ providing a more human-readable specification API that includes:
 - Simple way to require equality between grid cells (e.g. by adding clauses). E.g. could enforce still-life behavior on
   part of a Life pattern.
 - Set grid cell values in initial generation or later.
-- Assign region of grid cells using picture format (i.e. '.', '*', '?')
+- Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
 
 Note: I am not primarily interested in Conway's Game of Life, since there are many competing search applications.
 I am more interest in laying out periodic tiles with symmetries, hence my focus on which features to implement.
