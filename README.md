@@ -45,7 +45,7 @@ From a directory of your choosing:
 
 1. Install lingeling, e.g. by following these instructions: https://www.conwaylife.com/wiki/Tutorials/LLS#Installing_Lingeling
 2. Make sure the executable is on your path. E.g. copy the lingeling binary to /usr/local/bin/lingeling or add its location to PATH.
-   Verifiy that `lingeling --help | head` produces truncated help, beginning `usage: lingeling ...`
+   Verify that `lingeling --help | head` produces truncated help, beginning `usage: lingeling ...`
 3. `git clone https://github.com/PaulBC/grid-sat-solver`
 4. `cd grid-sat-solver`
 5. `python demo.py`
