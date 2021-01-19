@@ -24,8 +24,9 @@ providing a more human-readable specification API that includes:
 - Set grid cell values in initial generation or later.
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
 
-Note: I am not primarily interested in Conway's Game of Life, since there are many competing search applications.
-I am more interest in laying out periodic tiles with symmetries, hence my focus on which features to implement.
+Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
+Right now, I am more interested in laying out periodic tiles with symmetries, hence my focus on which features
+to implement.
 
 I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
 thus far. I may add one time permitting
