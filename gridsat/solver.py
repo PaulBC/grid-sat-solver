@@ -23,11 +23,3 @@ def solve(input_file, solution_file, seed=None):
   run_solver(input_file, solution_file, seed)
   with open(input_file) as input, open(solution_file) as solution:
     return load_results(input, solution)
-
-def wait_for_enter(msg='Press enter to continue'):
-  '''Wait for user to hit enter before proceeding.'''
-  # Use input() but catch exception to be compatible with Python 2 and 3.
-  try:
-    input(msg)
-  except:
-    pass

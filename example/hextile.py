@@ -72,4 +72,4 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
 
 if __name__ == "__main__":
   run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -250, 250)
-  wait_for_enter()
+  input('Press enter to exit.')

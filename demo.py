@@ -10,11 +10,18 @@ from gridsat.dimacs_sat import parse_lines
 from gridsat.gridbuilder import Tesselated, Toroidal, Open
 from gridsat.rulesymmetry import expand_symmetry, TOTALISTIC, ROTATED_HEX, TOTALISTIC_HEX
 from gridsat.runsolver import solve_and_print
-from gridsat.solver import wait_for_enter
 from gridsat.tesselation import CrossSurface, RotatedSquare, RotatedRhombus
 
 if not os.path.exists('data'):
     os.makedirs('data')
+
+def wait_for_enter(msg='**** Press [ENTER] or [RETURN] to continue ****'):
+  '''Wait for user to hit enter before proceeding.'''
+  # Use input() but catch exception to be compatible with Python 2 and 3.
+  try:
+    input(msg)
+  except:
+    pass
 
 LIFE_TEMPLATE = '''
   # death by loneliness or crowding
@@ -73,7 +80,7 @@ wait_for_enter()
 HEX_CONSTRAINTS = expand_symmetry(ROTATED_HEX, parse_lines(HEX_ROTATED_TEMPLATE))
 HEX_CONSTRAINTS.extend(expand_symmetry(TOTALISTIC_HEX, parse_lines(HEX_TOTALISTIC_TEMPLATE)))
 
-run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -300, 300)
+run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -250, 350)
 wait_for_enter()
 
 RHOMBUS_TEMPLATE = '''
@@ -86,9 +93,11 @@ RHOMBUS_TEMPLATE = '''
 '''
 print('Rhombus tiling constraints template:')
 print(RHOMBUS_TEMPLATE)
+wait_for_enter()
+
 RHOMBUS_CONSTRAINTS = parse_lines(RHOMBUS_TEMPLATE)
 
-run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), 0, 0)
+run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), 50, 0)
 wait_for_enter()
 
 print('Solving ad hoc SAT file on literal with tags')
@@ -99,6 +108,7 @@ print('Input file is %s, which contains:' % file)
 with open(file) as inp:
   for line in inp:
     print(line.rstrip())
+wait_for_enter()
 
 print('Solve using "python -m gridsat runsolver %s"' % file)
 solve_and_print(tmpfile)

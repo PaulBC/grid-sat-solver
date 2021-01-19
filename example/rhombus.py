@@ -81,4 +81,4 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
 
 if __name__ == "__main__":
   run_rhombus(sys.argv[1], RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), -100, 100)
-  wait_for_enter()
+  input('Press enter to exit.')
