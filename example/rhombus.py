@@ -29,7 +29,6 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
 
   # make CA grid
   root = MooreGridNode((0, 0, 0), equivalence)
-  #root = MooreGridNode((0, 0, 0), Toroidal(10, 10))
   grid = build_grid(root)
 
   def adjust_tag(orientation, tag):

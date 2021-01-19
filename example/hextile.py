@@ -33,7 +33,7 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
   solution_file = fileroot + '.out'
 
   # make CA grid
-  root = MooreGridNode((0, 0, 0), Tesselated(RotatedRhombus(15)), PeriodicTimeAdjust(1, 0, 0))
+  root = MooreGridNode((0, 0, 0), equivalence, PeriodicTimeAdjust(1, 0, 0))
   grid = build_grid(root)
 
   # create clauses for life rule conditions on grid
@@ -64,6 +64,14 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
 
   draw_hex_cells(xorig, yorig, cells)
 
+  cells = []
+  for i in range(len(valuegrid[0]) * 3):
+    row = []
+    for j in range(len(valuegrid[0][0]) * 3):
+      it, jt, _ = root.equivalence.to_equivalent(i, j)
+      row.append(valuegrid[0][it][jt])
+    cells.append(row)
+
   print()
   print('Hex tile patch with symmetry %s' % equivalence)
   width = len(cells[0])
@@ -71,5 +79,5 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
     print((' ' * (width - i)) + ' '.join(['O' if x else '.' for x in cells[i]]))
 
 if __name__ == "__main__":
-  run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -250, 250)
+  run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(RotatedRhombus(16)), -250, 250)
   input('Press enter to exit.')

@@ -93,7 +93,7 @@ wait_for_enter()
 HEX_CONSTRAINTS = expand_symmetry(ROTATED_HEX, parse_lines(HEX_ROTATED_TEMPLATE))
 HEX_CONSTRAINTS.extend(expand_symmetry(TOTALISTIC_HEX, parse_lines(HEX_TOTALISTIC_TEMPLATE)))
 
-run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -200, 350)
+run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(16)), -180, 350)
 wait_for_enter()
 
 RHOMBUS_TEMPLATE = '''
@@ -112,7 +112,7 @@ wait_for_enter()
 
 RHOMBUS_CONSTRAINTS = parse_lines(RHOMBUS_TEMPLATE)
 
-run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), 50, 0)
+run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(12)), 120, -20)
 wait_for_enter()
 
 print('Solving ad hoc SAT file on boolean literals.')
