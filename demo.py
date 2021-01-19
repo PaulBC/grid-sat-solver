@@ -34,7 +34,7 @@ LIFE_TEMPLATE = '''
    G <- O N NE ~E ~SE ~S ~SW ~W ~NW
 '''
 
-print('Life constraints template:')
+print('Life constraints template (with totalistic symmetry applied):')
 print(LIFE_TEMPLATE)
 wait_for_enter()
 
