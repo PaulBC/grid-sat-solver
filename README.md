@@ -10,7 +10,7 @@ providing a more human-readable specification API that includes:
 - Generation of cardinality constraints.
 - ~ and () operators for manipulating literals in Python console.
 - Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0 boundaries, etc.)
-- Generation of grid constraints (CA rules) with symmetry.
+- Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
 - Pre-defined Moore neighborhood with compass directions NW, N, NE, E, SE, S, SW, W  for neighbors and G (generated)
   for successor state of O (origin)
 - Comments in DIMACS file to provide a map of variable names to numbers as well as echoing
