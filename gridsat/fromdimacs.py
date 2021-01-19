@@ -1,5 +1,5 @@
 import sys
-from dimacs_sat import load_results
+from .dimacs_sat import load_results
 
 with open(sys.argv[1]) as input, open(sys.argv[2]) as solution:
   results = load_results(input, solution)

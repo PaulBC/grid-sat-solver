@@ -1,13 +1,13 @@
 import sys
 
-from clausebuilder import *
-from dimacs_sat import *
-from displayhex import *
-from gridbuilder import *
-from rulesymmetry import *
-from solver import *
-from tags import *
-from tesselation import *
+from gridsat.clausebuilder import *
+from gridsat.dimacs_sat import *
+from gridsat.displayhex import *
+from gridsat.gridbuilder import *
+from gridsat.rulesymmetry import *
+from gridsat.solver import *
+from gridsat.tags import *
+from gridsat.tesselation import *
 
 dimacs_file = sys.argv[1] + '.dim'
 symbolic_file = sys.argv[1] + '.sym'

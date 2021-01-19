@@ -1,7 +1,7 @@
 import re
-from clausebuilder import Literal, ZERO
-from gridbuilder import grid_layer
-from tags import expand_tag_clauses
+from .clausebuilder import Literal, ZERO
+from .gridbuilder import grid_layer
+from .tags import expand_tag_clauses
 
 IMPLIED_BY = '<-'
 

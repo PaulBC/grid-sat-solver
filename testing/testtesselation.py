@@ -1,4 +1,4 @@
-from tesselation import *
+from gridsat.tesselation import *
 
 mapper = RotatedRhombus(4)
 

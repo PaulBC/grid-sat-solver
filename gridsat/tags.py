@@ -1,6 +1,7 @@
 from collections import defaultdict
-from clausebuilder import Literal, collect_literals, expand_disjunction
 from functools import reduce
+
+from .clausebuilder import Literal, collect_literals, expand_disjunction
 
 def match_integers_all(literals, max_tags):
   '''Make a conjunction asserting equality and inequality between bit vectors and integers.'''

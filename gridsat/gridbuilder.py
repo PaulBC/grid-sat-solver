@@ -1,6 +1,6 @@
 from collections import deque
 import copy
-from tesselation import RotatedRhombus, RotatedSquare, FlippedRectangle
+from .tesselation import RotatedRhombus, RotatedSquare, FlippedRectangle
 
 class GridNode(object):
   position = None

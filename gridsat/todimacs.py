@@ -1,5 +1,5 @@
 import sys
-from dimacs_sat import read_symbolic, output_dimacs
+from .dimacs_sat import read_symbolic, output_dimacs
 
 with open(sys.argv[1]) as inp:
   clauses = read_symbolic(inp)

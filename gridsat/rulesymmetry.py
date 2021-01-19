@@ -1,5 +1,5 @@
-from clausebuilder import Literal, to_pairs, from_pairs
-from dimacs_sat import is_comment
+from .clausebuilder import Literal, to_pairs, from_pairs
+from .dimacs_sat import is_comment
 
 def to_mapping(cycles):
   '''Convert a list of cycles into a permutation mapping.'''

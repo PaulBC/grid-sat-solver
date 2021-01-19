@@ -1,5 +1,5 @@
 import os
-from dimacs_sat import load_results
+from .dimacs_sat import load_results
 
 COMMAND = 'lingeling %s'
 

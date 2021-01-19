@@ -1,6 +1,6 @@
 import sys
-from dimacs_sat import parse_line, output_dimacs
-from solver import solve
+from .dimacs_sat import parse_line, output_dimacs
+from .solver import solve
 
 input_file = sys.argv[1]
 dimacs_file = sys.argv[1] + '.dim'

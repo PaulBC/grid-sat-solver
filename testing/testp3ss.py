@@ -1,11 +1,11 @@
 import sys
 
-from gridbuilder import *
-from tesselation import *
-from clausebuilder import *
-from rulesymmetry import *
-from dimacs_sat import *
-from solver import *
+from gridsat.gridbuilder import *
+from gridsat.tesselation import *
+from gridsat.clausebuilder import *
+from gridsat.rulesymmetry import *
+from gridsat.dimacs_sat import *
+from gridsat.solver import *
 
 dimacs_file = sys.argv[1] + '.dim'
 symbolic_file = sys.argv[1] + '.sym'
