@@ -7,10 +7,6 @@ from gridsat.rulesymmetry import *
 from gridsat.dimacs_sat import *
 from gridsat.solver import *
 
-dimacs_file = sys.argv[1] + '.dim'
-symbolic_file = sys.argv[1] + '.sym'
-solution_file = sys.argv[1] + '.out'
-
 LIFE_CONSTRAINTS = expand_symmetry(TOTALISTIC, parse_lines('''
   # death by loneliness or crowding
   ~G <- ~N ~NE ~E ~SE ~S ~SW ~W

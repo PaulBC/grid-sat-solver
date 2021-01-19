@@ -1,3 +1,4 @@
+import random
 import sys
 
 from gridsat.clausebuilder import *
@@ -9,16 +10,16 @@ from gridsat.solver import *
 from gridsat.tags import *
 from gridsat.tesselation import *
 
-RHOMBUS_CONSTRAINTS = [
+RHOMBUS_CONSTRAINTS = parse_lines('''
 # some rhombus covers the center
-  (O(2), N(0), E(1)),
+   O(2) N(0) E(1))
 # no two rhombuses cover the center
-  (~O(2), ~N(0)),
-  (~O(2), ~E(1)),
-  (~N(0), ~E(1)),
-]
+  ~O(2) ~N(0))
+  ~O(2) ~E(1))
+  ~N(0) ~E(1))
+''')
 
-def run_rhombus(fileroot, rhombus_constraints, equivalence):
+def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
   dimacs_file = fileroot + '.dim'
   symbolic_file = fileroot + '.sym'
   tag_file = fileroot + '.tag'
@@ -38,12 +39,11 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence):
 
   print(inverse_adjust)
 
-  # add some random rhombuses to insure non-trival results
-  import random
-  n = equivalence.columnsize
-  for i in range(5):
-    tag_clauses.append((Literal('c_%d_%d_0' % (random.randint(0, n - 1),
-                                               random.randint(0, n - 1)))(random.randint(0,2)),))
+  # add some rhombuses to insure non-trival results
+  tag_clauses.append((Literal('c_1_1_0')(2),))
+  tag_clauses.append((Literal('c_3_5_0')(0),))
+  tag_clauses.append((Literal('c_7_2_0')(1),))
+  tag_clauses.append((Literal('c_5_7_0')(1),))
 
   clauses = expand_tag_clauses(tag_clauses)
 
@@ -60,7 +60,7 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence):
     output_symbolic(tag_clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file)
+  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32))
   valuegrid = get_value_grid('c', results)
 
   adjust_back = inverse_adjust(adjust_tag)
@@ -72,7 +72,7 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence):
       it, jt, label = root.equivalence.to_equivalent(i, j)
       row.append(adjust_back(label, valuegrid[0][it][jt]))
     cells.append(row)
-  draw_rhombus_cells(-200, 200, cells)
+  draw_rhombus_cells(xorig, yorig, cells)
 
   print()
   print('Rhombus tiling patch with symmetry %s' % equivalence)
@@ -80,5 +80,5 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence):
     print(' '.join(str(x) if x is not None else '.' for x in row))
 
 if __name__ == "__main__":
-  run_rhombus(sys.argv[1], RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)))
+  run_rhombus(sys.argv[1], RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), -100, 100)
   wait_for_enter()

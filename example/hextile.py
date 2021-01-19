@@ -26,7 +26,7 @@ HEX_CONSTRAINTS.extend(expand_symmetry(TOTALISTIC_HEX, parse_lines('''
   ~G <- NW N E
 ''')))
 
-def run_hextile(fileroot, hex_constraints, equivalence):
+def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
 
   dimacs_file = fileroot + '.dim'
   symbolic_file = fileroot + '.sym'
@@ -62,7 +62,7 @@ def run_hextile(fileroot, hex_constraints, equivalence):
       row.append(valuegrid[0][it][jt])
     cells.append(row)
 
-  draw_hex_cells(-200, 200, cells)
+  draw_hex_cells(xorig, yorig, cells)
 
   print()
   print('Hex tile patch with symmetry %s' % equivalence)
@@ -71,5 +71,5 @@ def run_hextile(fileroot, hex_constraints, equivalence):
     print((' ' * (width - i)) + ' '.join(['O' if x else '.' for x in cells[i]]))
 
 if __name__ == "__main__":
-  run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)))
+  run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -250, 250)
   wait_for_enter()
