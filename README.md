@@ -18,6 +18,15 @@ providing a more human-readable specification API that includes:
 - Minimally supported turtle graphics to display hex and rhombus grid.
 - Minimally supported boolean logic for expanding disjunctions into conjunctions of clauses.
 
+### Features not implemented yet, but nice to have.
+- Simple way to require equality between grid cells (e.g. by adding clauses). E.g. could enforce still-life behavior on
+  part of a Life pattern.
+- Set grid cell values in initial generation or later.
+- Assign region of grid cells using picture format (i.e. '.', '*', '?')
+
+Note: I am not primarily interested in Conway's Game of Life, since there are many competing searches. I am more
+interest in laying out periodic tiles with symmetries, hence my focus on which features to implement.
+
 I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
 thus far. I may add one time permitting
 
