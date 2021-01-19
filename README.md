@@ -25,7 +25,7 @@ providing a more human-readable specification API that includes:
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
 
 Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
-Right now, I am more interested in laying out periodic tiles with symmetries, hence my focus on which features
+Right now, I am more interested in laying out tiles with symmetries, hence my focus on which features
 to implement.
 
 I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
