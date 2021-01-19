@@ -18,6 +18,7 @@ with open(dimacs_file, 'w') as out:
 results = solve(dimacs_file, solution_file)
 
 print('Assignments to values are:')
-for name, value in results:
-  print('%s = %s' % (name, value))
+for key, value in results:
+  if key <= 'z':
+    print(key, value)
 
