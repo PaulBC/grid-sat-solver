@@ -9,7 +9,7 @@ from dimacs_sat import *
 # This represents Life rules as a disjunction of conjunctions and flattens them into clauses.
 
 def make_clauses(clause):
-  return flatten_disjunction(list(map(to_conjunction, all_symmetries(parse_line(clause), TOTALISTIC))))
+  return flatten_disjunction(list(map(to_conjunction, all_symmetries(TOTALISTIC, parse_line(clause)))))
 
 grid = build_grid(MooreGridNode((0, 0, 0), Open(5, 16), PeriodicTimeAdjust(3, 1, 0)))
 

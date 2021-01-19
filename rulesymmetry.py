@@ -1,4 +1,5 @@
 from clausebuilder import Literal, to_pairs, from_pairs
+from dimacs_sat import is_comment
 
 def to_mapping(cycles):
   '''Convert a list of cycles into a permutation mapping.'''
@@ -69,10 +70,20 @@ TOTALISTIC_HEX = [ROTATE_CLOCKWISE_HEX, MIX_CORNERS_SIDES]
 ROTATED_TRI_BELOW = [ROTATE_TRI_BELOW]
 ROTATED_TRI_ABOVE = [ROTATE_TRI_ABOVE]
 
-def all_symmetries(literals, symmetry):
+def all_symmetries(symmetry, literals):
   '''Returns a list of permutations of the given literals based on a symmetry basis.'''
   return [tuple(x for x in from_pairs(permuted))
           for permuted in find_closure(symmetry, to_pairs(literals))] 
+
+def expand_symmetry(symmetry, clauses):
+  '''Expands a list of clauses by given symmetry.'''
+  expanded = []
+  for clause in clauses:
+    if is_comment(clause):
+      expanded.append(clause)
+    else:
+      expanded.extend(all_symmetries(symmetry, clause))
+  return expanded
 
 def to_conjunction(literals):
   '''Wraps each literal in a list in a singleton tuple to make it a conjunction of clauses.'''

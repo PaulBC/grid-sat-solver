@@ -7,21 +7,20 @@ from rulesymmetry import *
 from dimacs_sat import *
 from solver import *
 
-def make_clauses(clause):
-  return all_symmetries(parse_line(clause), TOTALISTIC)
-
 dimacs_file = sys.argv[1] + '.dim'
 symbolic_file = sys.argv[1] + '.sym'
 solution_file = sys.argv[1] + '.out'
 
-print('# generating clauses for CA rule')
-lt2 = make_clauses('~G <- ~N ~NE ~E ~SE ~S ~SW ~W')
-ge4 = make_clauses('~G <- N NE E SE')
-eq3 = make_clauses('G <- N NE E ~SE ~S ~SW ~W ~NW')
-eq2a = make_clauses('~G <- ~O N NE ~E ~SE ~S ~SW ~W ~NW')
-eq2b = make_clauses('G <- O N NE ~E ~SE ~S ~SW ~W ~NW')
-all_constraints = lt2 + ge4 + eq3 + eq2a + eq2b
-print('# done')
+all_constraints = expand_symmetry(TOTALISTIC, parse_lines('''
+  # death by loneliness or crowding
+  ~G <- ~N ~NE ~E ~SE ~S ~SW ~W
+  ~G <- N NE E SE
+  # birth on 3 neighbors
+   G <- N NE E ~SE ~S ~SW ~W ~NW
+  # survival on 2 or 3 neighbors
+  ~G <- ~O N NE ~E ~SE ~S ~SW ~W ~NW
+   G <- O N NE ~E ~SE ~S ~SW ~W ~NW
+'''))
 
 root = MooreGridNode((0, 0, 0), Open(5, 16), PeriodicTimeAdjust(3, 1, 0))
 grid = build_grid(root)

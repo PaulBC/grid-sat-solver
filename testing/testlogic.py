@@ -53,7 +53,7 @@ print()
 
 print('# clauses for number matching')
 
-syms = all_symmetries((O(1), N(2), W(0), S(3)), ROTATED_TRI_BELOW)
+syms = all_symmetries(ROTATED_TRI_BELOW, (O(1), N(2), W(0), S(3)))
 
 disjunction = make_or_of_ands_matcher(syms)
 
@@ -113,8 +113,7 @@ literals = [O, S, W]
 
 matchers = []
 for tri in TRIS:
-  matchers.extend(all_symmetries(tuple(x(tag) for x, tag in zip(literals, tri)),
-                                ROTATED_TRI_BELOW))
+  matchers.extend(all_symmetries(ROTATED_TRI_BELOW, tuple(x(tag) for x, tag in zip(literals, tri))))
 
 clauses = make_matching_clauses(matchers)
 

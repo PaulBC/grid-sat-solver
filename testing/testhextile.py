@@ -8,29 +8,26 @@ from rulesymmetry import *
 from dimacs_sat import *
 from solver import *
 
-def make_rotated_clauses(clause):
-  return all_symmetries(parse_line(clause), ROTATED_HEX)
-
-def make_totalistic_clauses(clause):
-  return all_symmetries(parse_line(clause), TOTALISTIC_HEX)
-
 dimacs_file = sys.argv[1] + '.dim'
 symbolic_file = sys.argv[1] + '.sym'
 solution_file = sys.argv[1] + '.out'
 
-print('# generating clauses for tiling rule')
-# birth on 2o
-birth_2o = make_rotated_clauses('G <- NW N ~E ~SE ~S ~W')
-# survival on 2m
-survive_2m_a = make_rotated_clauses('G <- O NW ~N E ~SE ~S ~W')
-survive_2m_b = make_rotated_clauses('~G <- ~O NW ~N E ~SE ~S ~W')
-# death on 1-, 2o, 2p, 3+
-death_le_1 = make_rotated_clauses('~G <- ~N ~E ~SE ~S ~W')
-death_2o = make_rotated_clauses('~G <- NW N ~E ~SE ~S ~W')
-death_2p = make_rotated_clauses('~G <- NW ~N ~E SE ~S ~W')
-death_ge_3 = make_totalistic_clauses('~G <- NW N E')
-all_constraints = birth_2o + survive_2m_a + survive_2m_b + death_le_1 + death_2o + death_2p + death_ge_3
-print('# done')
+all_constraints = expand_symmetry(ROTATED_HEX, parse_lines('''
+  # birth on 2o
+   G <- NW N ~E ~SE ~S ~W
+  # survival on 2m
+   G <- O NW ~N E ~SE ~S ~W
+  ~G <- ~O NW ~N E ~SE ~S ~W
+  # death on <=1, 2o, 2p
+  ~G <- ~N ~E ~SE ~S ~W
+  ~G <- NW N ~E ~SE ~S ~W
+  ~G <- NW ~N ~E SE ~S ~W
+'''))
+
+all_constraints.extend(expand_symmetry(TOTALISTIC_HEX, parse_lines('''
+  # death on >= 3
+  ~G <- NW N E
+''')))
 
 # make CA grid
 root = MooreGridNode((0, 0, 0), Tesselated(RotatedRhombus(15)), PeriodicTimeAdjust(1, 0, 0))

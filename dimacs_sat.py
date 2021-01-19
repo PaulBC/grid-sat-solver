@@ -13,9 +13,12 @@ def parse_line(line):
   tokens = line.split()
   # if needed, convert 'B <- A0 ... An' to 'B ~AO ... ~An'
   if len(tokens) >= 2 and tokens[1] == IMPLIED_BY:
-    return [Literal.parse(tokens[0])] + [~Literal.parse(token) for token in tokens[2:]]
+    return tuple([Literal.parse(tokens[0])] + [~Literal.parse(token) for token in tokens[2:]])
 
-  return [Literal.parse(token) for token in tokens]
+  return tuple(Literal.parse(token) for token in tokens)
+
+def parse_lines(lines):
+  return [parse_line(line) for line in lines.strip().split('\n')]
 
 def is_comment(clause):
   '''Check if a symbolic clause is a string comment.'''
@@ -117,17 +120,20 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
   # create symbolic clauses for grid nodes using template
   clauses = []
   for constraint in template_constraints:
-    clauses.append('Template: ' + clause_to_string(constraint, consequent))
-    # apply the constraint to each grid cell
-    for grid_sub in grid_subs:
-      clause = []
-      for literal in constraint:
-        info = grid_sub.get(literal.name)
-        if info:
-          literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
-        clause.append(literal)
-      if ZERO not in clause or ~ZERO not in clause:
-        clauses.append(clause)
+    if is_comment(constraint):
+      clauses.append(constraint)
+    else:
+      clauses.append('Template: ' + clause_to_string(constraint, consequent))
+      # apply the constraint to each grid cell
+      for grid_sub in grid_subs:
+        clause = []
+        for literal in constraint:
+          info = grid_sub.get(literal.name)
+          if info:
+            literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
+          clause.append(literal)
+        if ZERO not in clause or ~ZERO not in clause:
+          clauses.append(clause)
   if has_zero:
     clauses.append([~ZERO])
   return clauses
