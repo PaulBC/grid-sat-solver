@@ -23,6 +23,8 @@ providing a more human-readable specification API that includes:
   behavior on  part of a Life pattern.
 - Set grid cell values in initial generation or later (using single-literal clauses).
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
+- Add auxiliary variables to template. E.g. `STATOR <- G O` would force STATOR true if booth cell and successor
+  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions.
 
 Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
 Right now, I am more interested in laying out tiles with symmetries, hence my focus on which features
