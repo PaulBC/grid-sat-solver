@@ -68,7 +68,7 @@ def draw_rhombus(rotation, fillcolor=None):
   turtle.penup()
   pop_state()
 
-RHOMBUS_COLORS = ['lightblue', 'firebrick', 'lightgreen']
+RHOMBUS_COLORS = ['lightblue', 'salmon', 'lightgreen']
 def rhombus_cell(i, j, rotation):
   push_state()
   (x, y) = position(i, j)
