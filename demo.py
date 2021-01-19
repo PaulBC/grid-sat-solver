@@ -84,12 +84,14 @@ run_hextile('data/hex', HEX_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -200, 3
 wait_for_enter()
 
 RHOMBUS_TEMPLATE = '''
-# some rhombus covers the center
-   O(2) N(0) E(1))
-# no two rhombuses cover the center
-  ~O(2) ~N(0))
-  ~O(2) ~E(1))
-  ~N(0) ~E(1))
+# Rhombuses are placed at hex cells with center matching center of upward-pointing triangle.
+# Each label i means opposite vertex points 270 - 120i degrees. (0: 270, 1: 150, 2: 30).
+# Some rhombus covers shared triangle:
+   O(2) N(0) E(1)
+# No two rhombuses cover the shared triangle:
+  ~O(2) ~N(0)
+  ~O(2) ~E(1)
+  ~N(0) ~E(1)
 '''
 print('Rhombus tiling constraints template:')
 print(RHOMBUS_TEMPLATE)

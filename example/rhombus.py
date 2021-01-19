@@ -11,12 +11,14 @@ from gridsat.tags import *
 from gridsat.tesselation import *
 
 RHOMBUS_CONSTRAINTS = parse_lines('''
-# some rhombus covers the center
-   O(2) N(0) E(1))
-# no two rhombuses cover the center
-  ~O(2) ~N(0))
-  ~O(2) ~E(1))
-  ~N(0) ~E(1))
+# Rhombuses are placed at hex cells with center matching center of upward-pointing triangle.
+# Each label i means opposite vertex points 270 - 120i degrees. (0: 270, 1: 150, 2: 30).
+# Some rhombus covers shared triangle:
+   O(2) N(0) E(1)
+# No two rhombuses cover the shared triangle:
+  ~O(2) ~N(0)
+  ~O(2) ~E(1)
+  ~N(0) ~E(1)
 ''')
 
 def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
@@ -76,8 +78,9 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
 
   print()
   print('Rhombus tiling patch with symmetry %s' % equivalence)
-  for row in cells:
-    print(' '.join(str(x) if x is not None else '.' for x in row))
+  width = len(cells[0])
+  for i in range(len(cells)):
+    print((' ' * (width - i))  + ' '.join(str(x) if x is not None else '.' for x in cells[i]))
 
 if __name__ == "__main__":
   run_rhombus(sys.argv[1], RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), -100, 100)
