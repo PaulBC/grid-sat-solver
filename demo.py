@@ -7,11 +7,11 @@ from example.rhombus import run_rhombus
 from example.p2patch import run_p2patch
 from example.stilllife import run_stilllife
 
-from gridsat.dimacs_sat import parse_lines
-from gridsat.gridbuilder import Tesselated, Toroidal, Open
-from gridsat.rulesymmetry import expand_symmetry, TOTALISTIC, ROTATED_HEX, TOTALISTIC_HEX
-from gridsat.runsolver import solve_and_print
-from gridsat.tesselation import CrossSurface, RotatedSquare, RotatedRhombus
+from symsat.dimacs_sat import parse_lines
+from symsat.gridbuilder import Tesselated, Toroidal, Open
+from symsat.rulesymmetry import expand_symmetry, TOTALISTIC, ROTATED_HEX, TOTALISTIC_HEX
+from symsat.runsolver import solve_and_print
+from symsat.tesselation import CrossSurface, RotatedSquare, RotatedRhombus
 
 if not os.path.exists('data'):
     os.makedirs('data')
@@ -125,7 +125,7 @@ with open(file) as inp:
     print(line.rstrip())
 wait_for_enter()
 
-print('Solve using "python -m gridsat runsolver %s"' % file)
+print('Solve using "python -m symsat.runsolver %s"' % file)
 solve_and_print(tmpfile)
 wait_for_enter()
 
@@ -139,7 +139,7 @@ with open(file) as inp:
     print(line.rstrip())
 wait_for_enter()
 
-print('Solve using "python -m gridsat runsolver %s"' % file)
+print('Solve using "python -m symsat.runsolver %s"' % file)
 solve_and_print(tmpfile)
 
 print()

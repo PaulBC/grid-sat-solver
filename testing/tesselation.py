@@ -1,4 +1,4 @@
-from gridsat.tesselation import *
+from symsat.tesselation import *
 
 mapper = RotatedRhombus(4)
 

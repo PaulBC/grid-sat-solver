@@ -1,12 +1,12 @@
 import random
 import sys
 
-from gridsat.gridbuilder import *
-from gridsat.tesselation import *
-from gridsat.clausebuilder import *
-from gridsat.rulesymmetry import *
-from gridsat.dimacs_sat import *
-from gridsat.solver import *
+from symsat.gridbuilder import *
+from symsat.tesselation import *
+from symsat.clausebuilder import *
+from symsat.rulesymmetry import *
+from symsat.dimacs_sat import *
+from symsat.solver import *
 
 LIFE_CONSTRAINTS = expand_symmetry(TOTALISTIC, parse_lines('''
   # death by loneliness or crowding

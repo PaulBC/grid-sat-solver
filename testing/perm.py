@@ -1,5 +1,5 @@
-from gridsat.rulesymmetry import *
-from gridsat.clausebuilder import Literal, to_pairs, from_pairs
+from symsat.rulesymmetry import *
+from symsat.clausebuilder import Literal, to_pairs, from_pairs
 
 neighborhood = (O, ~G, N(1), NE(2), ~E(3), SE(4), S(5), SW(6), W(7), NW(8))
 

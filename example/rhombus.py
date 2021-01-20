@@ -1,14 +1,14 @@
 import random
 import sys
 
-from gridsat.clausebuilder import *
-from gridsat.dimacs_sat import *
-from gridsat.displayhex import *
-from gridsat.gridbuilder import *
-from gridsat.rulesymmetry import *
-from gridsat.solver import *
-from gridsat.tags import *
-from gridsat.tesselation import *
+from symsat.clausebuilder import *
+from symsat.dimacs_sat import *
+from symsat.displayhex import *
+from symsat.gridbuilder import *
+from symsat.rulesymmetry import *
+from symsat.solver import *
+from symsat.tags import *
+from symsat.tesselation import *
 
 RHOMBUS_CONSTRAINTS = parse_lines('''
 # Rhombuses are placed at hex cells with center matching center of upward-pointing triangle.

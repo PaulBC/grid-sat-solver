@@ -1,10 +1,10 @@
 from collections import defaultdict
 from functools import reduce
 
-from gridsat.clausebuilder import *
-from gridsat.rulesymmetry import *
-from gridsat.dimacs_sat import *
-from gridsat.tags import *
+from symsat.clausebuilder import *
+from symsat.rulesymmetry import *
+from symsat.dimacs_sat import *
+from symsat.tags import *
 
 a = Literal('a')
 b = Literal('b')
