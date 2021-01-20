@@ -119,6 +119,7 @@ class PeriodicTimeAdjust(object):
   def __str__(self):
     return 'p%d' % period
 
+CENTER_CELL = 'O'
 
 class MooreGridNode(GridNode):
   def __init__(self, position, equivalence, timeadjust=PeriodicTimeAdjust(1)):
@@ -181,13 +182,22 @@ def build_grid(node):
         frontier.append(neighbor)
   return sorted(grid_nodes, key=lambda node: node.position)
 
-def bound_population(grid, comparator, size, generation=0):
-  '''Assign a cardinality constraint to a generation (default first).'''
-  cardinality = comparator([Literal(node.name()) for node in grid_layer(grid, generation)], size)
+def bound_cardinality(grid, comparator, size, generation, prefix):
+  '''Assign a cardinality constraint to a generation, possibly with a variable prefix.'''
+  cardinality = comparator([Literal(prefix + node.name())
+                            for node in grid_layer(grid, generation)], size)
   clauses = ['Population constraint %s %s' % (comparator.__name__, size)]
   clauses.extend(cardinality.adder_clauses)
   clauses.extend(cardinality.constraint_clauses)
   return clauses
+
+def bound_population(grid, comparator, size, generation = 0):
+  '''Assign a cardinality constraint to population in a generation (0 by default).'''
+  return bound_cardinality(grid, comparator, size, generation, '')
+
+def bound_helper(grid, comparator, size, name, generation = 0):
+  '''Assign a cardinality constraint to helper variable in a generation (0 by default).'''
+  return bound_cardinality(grid, comparator, size, generation, name + '$')
 
 def grid_layer(grid, t):
   '''Get layer of grid at generation t, not including outside cells.'''
@@ -207,7 +217,7 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
   has_zero = False
   for node in grid:
     grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
-    grid_sub['O'] = node_info(node)
+    grid_sub[CENTER_CELL] = node_info(node)
     for variable in auxiliary:
       grid_sub[variable] = (variable + node.name(), node.orientation)
     if ZERO.name in [name for name, orientation in grid_sub.values()]:

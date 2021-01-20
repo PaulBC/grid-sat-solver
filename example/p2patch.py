@@ -17,11 +17,13 @@ LIFE_CONSTRAINTS = expand_symmetry(TOTALISTIC, parse_lines('''
   # survival on 2 or 3 neighbors
   ~G <- ~O N NE ~E ~SE ~S ~SW ~W ~NW
    G <- O N NE ~E ~SE ~S ~SW ~W ~NW
-  # no two consecutive live generations
-  ~G ~O
+  # stator is true iff two consecutive live generations
+  stator$ <- G O
+  ~stator$ <- ~G
+  ~stator$ <- ~O
 '''))
 
-def run_p2patch(fileroot, life_constraints, equivalence):
+def run_p2patch(fileroot, life_constraints, equivalence, num_stators=0):
   dimacs_file = fileroot + '.dim'
   symbolic_file = fileroot + '.sym'
   solution_file = fileroot + '.out'
@@ -35,6 +37,10 @@ def run_p2patch(fileroot, life_constraints, equivalence):
 
   # add clauses for a cardinality bound of >= 15 in first generation
   clauses.extend(bound_population(grid, GreaterThanOrEqual, 15, 0))
+
+  # add clauses for exact number of stators.
+  clauses.extend(bound_helper(grid, LessThanOrEqual, num_stators, 'stator', 0))
+  clauses.extend(bound_helper(grid, GreaterThanOrEqual, num_stators, 'stator', 0))
 
   # write dimacs file for solver
   with open(dimacs_file, 'w') as out:
@@ -62,4 +68,4 @@ def run_p2patch(fileroot, life_constraints, equivalence):
     print(''.join(['*' if x else '.' for x in cells[i]]))
 
 if __name__ == "__main__":
-  run_p2patch(sys.argv[1], LIFE_CONSTRAINTS, Tesselated(RotatedSquare(12)))
+  run_p2patch(sys.argv[1], LIFE_CONSTRAINTS, Tesselated(RotatedSquare(12)), 4)

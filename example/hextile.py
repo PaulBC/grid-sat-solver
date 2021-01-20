@@ -64,14 +64,6 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
 
   draw_hex_cells(xorig, yorig, cells)
 
-  cells = []
-  for i in range(len(valuegrid[0]) * 3):
-    row = []
-    for j in range(len(valuegrid[0][0]) * 3):
-      it, jt, _ = root.equivalence.to_equivalent(i, j)
-      row.append(valuegrid[0][it][jt])
-    cells.append(row)
-
   print()
   print('Hex tile patch with symmetry %s' % equivalence)
   width = len(cells[0])

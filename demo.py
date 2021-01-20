@@ -16,7 +16,7 @@ from symsat.tesselation import CrossSurface, RotatedSquare, RotatedRhombus
 if not os.path.exists('data'):
     os.makedirs('data')
 
-def wait_for_enter(msg='**** Press [ENTER] or [RETURN] to continue ****'):
+def wait_for_enter(msg='===== Press [ENTER] or [RETURN] to continue ====='):
   '''Wait for user to hit enter before proceeding.'''
   # Use input() but catch exception to be compatible with Python 2 and 3.
   try:
@@ -55,16 +55,24 @@ print('Setting up search for p3 spaceship.')
 run_p3ss('data/p3ss', LIFE_CONSTRAINTS)
 wait_for_enter()
 
-FLIP_FLOP_TEMPLATE = '''
-# no two consecutive live generations
-  ~G ~O
+STATOR_TEMPLATE = '''
+  # stator is true iff two consecutive live generations
+  stator$ <- G O
+  ~stator$ <- ~G
+  ~stator$ <- ~O
 '''
 
-print('Adding template for "phoenix" period-2 patch')
-print(FLIP_FLOP_TEMPLATE)
+print('Adding template for counting stators (two consecutive live cells) in period-2 patch')
+print(STATOR_TEMPLATE)
 wait_for_enter()
-run_p2patch('data/p2patch', LIFE_CONSTRAINTS + parse_lines(FLIP_FLOP_TEMPLATE),
-            Tesselated(RotatedSquare(12)))
+run_p2patch('data/p2patch', LIFE_CONSTRAINTS + parse_lines(STATOR_TEMPLATE),
+            Tesselated(RotatedSquare(12)), 0)
+print('Found one with no stators ("phoenix" pattern)')
+print('Next searching for 4 stators.')
+wait_for_enter()
+run_p2patch('data/p2patch', LIFE_CONSTRAINTS + parse_lines(STATOR_TEMPLATE),
+            Tesselated(RotatedSquare(12)), 4)
+print('Found one with 4 stators.')
 wait_for_enter()
 
 HEX_ROTATED_TEMPLATE = '''

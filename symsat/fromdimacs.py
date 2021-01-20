@@ -6,4 +6,4 @@ with open(sys.argv[1]) as input, open(sys.argv[2]) as solution:
 
 for key, value in results:
   if key <= 'z':
-    print(key, value)
+    print('%s %s' % (key, value))
