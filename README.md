@@ -1,5 +1,7 @@
-# MeshSAT: a Python API for grid-based SAT solving
+# SymSAT: a Python API for grid-based SAT solving
 This repo consists of Python code for creating SAT instances for grid based constraint problems (like Conway's Game of Life oscillators).
+"SymSAT" refers to its use of symmetry and symbols in defining these instances.
+
 The purpose of this code is to generate DIMACS files representing SAT problems as input to an external solver by
 providing a more human-readable specification API that includes:
 - Symbolic representation of boolean constraints with named variables.
