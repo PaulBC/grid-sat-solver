@@ -1,4 +1,4 @@
-# grid-sat-solver
+# GridSAT a Python API for using SAT solvers on grids of values
 Python code for creating SAT instances for grid based constraint problems (like Conway's Game of Life oscillators).
 The purpose of this code is to generate DIMACS files representing SAT problems as input to an external solver by
 providing a more human-readable specification API that includes:
