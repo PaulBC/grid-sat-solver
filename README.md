@@ -15,6 +15,9 @@ providing a more human-readable specification API that includes:
 - Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
 - Pre-defined Moore neighborhood with compass directions NW, N, NE, E, SE, S, SW, W  for neighbors and G (generated)
   for successor state of O (origin)
+- Grid templates can include helper variables. E.g. `stator$ <- G O` would force `stator` true if booth cell and successor
+  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions ($ indicates it
+  is part of template and not a single literal).
 - Comments in DIMACS file to provide a map of variable names to numbers as well as echoing
   comments from symbolic files.
 - Minimally supported turtle graphics to display hex and rhombus grid.
@@ -56,8 +59,6 @@ problem back to the original specification.
   behavior on  part of a Life pattern.
 - Set grid cell values in initial generation or later (using single-literal clauses).
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
-- Add auxiliary variables to template. E.g. `STATOR <- G O` would force STATOR true if booth cell and successor
-  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions.
 - Extensions to syntax, such as expressing cardinality or symmetry in the input file. I have mostly
   avoided this because it is hard to know where to stop, and it is possible to do many of these things
   very concisely in Python.
