@@ -101,11 +101,15 @@ def clause_to_string(clause, consequent):
      clause = head + [IMPLIED_BY] + [~x for x in clause if x.name != consequent]
   return ' '.join(map(str, clause))
 
+# TODO: This seems like the wrong module. Maybe gridbuilder?
 def inflate_grid_template(template_constraints, grid, consequent=None,
                           adjust_tag=lambda orientation, tag: tag):
   '''Inflate each template clause using grid cells.'''
   def node_info(node):
     return (ZERO.name if node.is_outside() else node.name(), node.orientation)
+
+  # collect auxiliary variables (ending with $) to associate with grid cells.
+  auxiliary = list(filter(lambda x: x.endswith('$'), find_variables(template_constraints)))
 
   # map neighbor symbols to names of grid nodes.
   grid_subs = []
@@ -113,6 +117,8 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
   for node in grid:
     grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
     grid_sub['O'] = node_info(node)
+    for variable in auxiliary:
+      grid_sub[variable] = (variable + node.name(), node.orientation)
     if ZERO.name in [name for name, orientation in grid_sub.values()]:
       has_zero = True
     grid_subs.append(grid_sub)
