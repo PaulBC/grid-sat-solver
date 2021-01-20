@@ -1,5 +1,7 @@
 from collections import deque
 import copy
+from .clausebuilder import Literal, ZERO
+from .symbolic_util import clause_to_string, find_variables, is_comment
 from .tesselation import RotatedRhombus, RotatedSquare, FlippedRectangle
 
 class GridNode(object):
@@ -179,6 +181,56 @@ def build_grid(node):
         frontier.append(neighbor)
   return sorted(grid_nodes, key=lambda node: node.position)
 
+def bound_population(grid, comparator, size, generation=0):
+  '''Assign a cardinality constraint to a generation (default first).'''
+  cardinality = comparator([Literal(node.name()) for node in grid_layer(grid, generation)], size)
+  clauses = ['Population constraint %s %s' % (comparator.__name__, size)]
+  clauses.extend(cardinality.adder_clauses)
+  clauses.extend(cardinality.constraint_clauses)
+  return clauses
+
 def grid_layer(grid, t):
   '''Get layer of grid at generation t, not including outside cells.'''
   return filter(lambda x:x.position[2] == t and not x.is_outside(), grid)
+
+def inflate_grid_template(template_constraints, grid, consequent=None,
+                          adjust_tag=lambda orientation, tag: tag):
+  '''Inflate each template clause using grid cells.'''
+  def node_info(node):
+    return (ZERO.name if node.is_outside() else node.name(), node.orientation)
+
+  # collect auxiliary variables (ending with $) to associate with grid cells.
+  auxiliary = list(filter(lambda x: x.endswith('$'), find_variables(template_constraints)))
+
+  # map neighbor symbols to names of grid nodes.
+  grid_subs = []
+  has_zero = False
+  for node in grid:
+    grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
+    grid_sub['O'] = node_info(node)
+    for variable in auxiliary:
+      grid_sub[variable] = (variable + node.name(), node.orientation)
+    if ZERO.name in [name for name, orientation in grid_sub.values()]:
+      has_zero = True
+    grid_subs.append(grid_sub)
+
+  # create symbolic clauses for grid nodes using template
+  clauses = []
+  for constraint in template_constraints:
+    if is_comment(constraint):
+      clauses.append(constraint)
+    else:
+      clauses.append('Template: ' + clause_to_string(constraint, consequent))
+      # apply the constraint to each grid cell
+      for grid_sub in grid_subs:
+        clause = []
+        for literal in constraint:
+          info = grid_sub.get(literal.name)
+          if info:
+            literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
+          clause.append(literal)
+        if ZERO not in clause or ~ZERO not in clause:
+          clauses.append(clause)
+  if has_zero:
+    clauses.append([~ZERO])
+  return clauses

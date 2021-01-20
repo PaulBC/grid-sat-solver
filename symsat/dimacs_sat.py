@@ -1,37 +1,7 @@
 import re
 from .clausebuilder import Literal, ZERO
-from .gridbuilder import grid_layer
+from .symbolic_util import find_variables, parse_line, parse_lines, is_comment
 from .tags import expand_tag_clauses
-
-IMPLIED_BY = '<-'
-
-def parse_line(line):
-  '''Parse a line of text with symbols.'''
-  line = line.strip()
-  if not line or line.startswith('# '):
-    return line[2:]
-  tokens = line.split()
-  # if needed, convert 'B <- A0 ... An' to 'B ~AO ... ~An'
-  if len(tokens) >= 2 and tokens[1] == IMPLIED_BY:
-    return tuple([Literal.parse(tokens[0])] + [~Literal.parse(token) for token in tokens[2:]])
-
-  return tuple(Literal.parse(token) for token in tokens)
-
-def parse_lines(lines):
-  return [parse_line(line) for line in lines.strip().split('\n')]
-
-def is_comment(clause):
-  '''Check if a symbolic clause is a string comment.'''
-  return isinstance(clause, str)
-
-def find_variables(symbolic_clauses):
-  '''Find variables in symbolic clauses.'''
-  variables = set()
-  for clause in symbolic_clauses:
-    if not is_comment(clause):
-      for literal in clause:
-        variables.add(literal.name)
-  return variables
 
 def is_always_true(clause):
   '''Check if clause is always true because it has both a literal and its negation.'''
@@ -93,64 +63,6 @@ def output_dimacs(symbolic_clauses, out):
     else:
       num_clause = [(1 if literal.value else -1) * symbol_table[literal.name] for literal in clause]
       out.write('%s 0\n' % ' '.join([str(x) for x in num_clause]))
-
-def clause_to_string(clause, consequent):
-  '''Convert clause to a string, in implication form if consequent is present.'''
-  head = list(filter(lambda x: x.name == consequent, clause))
-  if head:
-     clause = head + [IMPLIED_BY] + [~x for x in clause if x.name != consequent]
-  return ' '.join(map(str, clause))
-
-# TODO: This seems like the wrong module. Maybe gridbuilder?
-def inflate_grid_template(template_constraints, grid, consequent=None,
-                          adjust_tag=lambda orientation, tag: tag):
-  '''Inflate each template clause using grid cells.'''
-  def node_info(node):
-    return (ZERO.name if node.is_outside() else node.name(), node.orientation)
-
-  # collect auxiliary variables (ending with $) to associate with grid cells.
-  auxiliary = list(filter(lambda x: x.endswith('$'), find_variables(template_constraints)))
-
-  # map neighbor symbols to names of grid nodes.
-  grid_subs = []
-  has_zero = False
-  for node in grid:
-    grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
-    grid_sub['O'] = node_info(node)
-    for variable in auxiliary:
-      grid_sub[variable] = (variable + node.name(), node.orientation)
-    if ZERO.name in [name for name, orientation in grid_sub.values()]:
-      has_zero = True
-    grid_subs.append(grid_sub)
-
-  # create symbolic clauses for grid nodes using template
-  clauses = []
-  for constraint in template_constraints:
-    if is_comment(constraint):
-      clauses.append(constraint)
-    else:
-      clauses.append('Template: ' + clause_to_string(constraint, consequent))
-      # apply the constraint to each grid cell
-      for grid_sub in grid_subs:
-        clause = []
-        for literal in constraint:
-          info = grid_sub.get(literal.name)
-          if info:
-            literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
-          clause.append(literal)
-        if ZERO not in clause or ~ZERO not in clause:
-          clauses.append(clause)
-  if has_zero:
-    clauses.append([~ZERO])
-  return clauses
-
-def bound_population(grid, comparator, size, generation=0):
-  '''Assign a cardinality constraint to a generation (default first).'''
-  cardinality = comparator([Literal(node.name()) for node in grid_layer(grid, generation)], size)
-  clauses = ['Population constraint %s %s' % (comparator.__name__, size)]
-  clauses.extend(cardinality.adder_clauses)
-  clauses.extend(cardinality.constraint_clauses)
-  return clauses
 
 # regex for parsing comments mapping variable names to numbers
 VAR_REGEX = re.compile('^c variable ([^ ]+): ([0-9]+)')
