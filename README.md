@@ -27,6 +27,9 @@ providing a more human-readable specification API that includes:
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
 - Add auxiliary variables to template. E.g. `STATOR <- G O` would force STATOR true if booth cell and successor
   are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions.
+- Extensions to syntax, such as expressing cardinality or symmetry in the input file. I have mostly
+  avoided this because it is hard to know where to stop, and it is possible to do many of these things
+  very concisely in Python.
 
 Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
 Right now, I am more interested in laying out tiles with symmetries, hence my focus on which features
