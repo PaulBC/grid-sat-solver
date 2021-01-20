@@ -1,10 +1,12 @@
-# grid-sat-solver
-Python code for creating SAT instances for grid based constraint problems (like Conway's Game of Life oscillators).
+# SymSAT: a Python API for grid-based SAT solving
+This repo consists of Python code for creating SAT instances for grid based constraint problems (like Conway's Game of Life oscillators).
+"SymSAT" refers to its use of symmetry and symbols in defining these instances.
+
 The purpose of this code is to generate DIMACS files representing SAT problems as input to an external solver by
 providing a more human-readable specification API that includes:
 - Symbolic representation of boolean constraints with named variables.
 - Parsing of clause `a <- b c d` (b & c & d implies a) as a more readable alternative to equivalent
-  `a ~b ~c ~d`.
+  `a ~b ~c ~d` (inspired by Prolog :- though we are not limited to Horn clauses).
 - "Tagged" literals representating small integer values. E.g. a(5) means a==5 while ~a(5) means a!=5. 
   Parentheses are used to provide an overloadable python operator.
 - Generation of cardinality constraints.
@@ -17,18 +19,6 @@ providing a more human-readable specification API that includes:
   comments from symbolic files.
 - Minimally supported turtle graphics to display hex and rhombus grid.
 - Minimally supported boolean logic for expanding disjunctions into conjunctions of clauses.
-
-### Features not implemented yet, but nice to have.
-- Simple way to require equality between grid cells (and generate clauses). E.g. this could enforce still-life
-  behavior on  part of a Life pattern.
-- Set grid cell values in initial generation or later (using single-literal clauses).
-- Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
-- Add auxiliary variables to template. E.g. `STATOR <- G O` would force STATOR true if booth cell and successor
-  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions.
-
-Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
-Right now, I am more interested in laying out tiles with symmetries, hence my focus on which features
-to implement.
 
 I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
 thus far. I may add one time permitting.
@@ -60,3 +50,18 @@ Note that it creates a directory `data` with all the files generated in this pro
 of the formats used by this package (both symbolic and dimacs). Comments in the symbolic file are echoed along
 to DIMACS so it should be possible (though not necessarily easy) to map the constraints in the final SAT 
 problem back to the original specification.
+
+## Features not implemented yet, but nice to have.
+- Simple way to require equality between grid cells (and generate clauses). E.g. this could enforce still-life
+  behavior on  part of a Life pattern.
+- Set grid cell values in initial generation or later (using single-literal clauses).
+- Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
+- Add auxiliary variables to template. E.g. `STATOR <- G O` would force STATOR true if booth cell and successor
+  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions.
+- Extensions to syntax, such as expressing cardinality or symmetry in the input file. I have mostly
+  avoided this because it is hard to know where to stop, and it is possible to do many of these things
+  very concisely in Python.
+
+Note: I am not primarily targeting Conway's Game of Life (CGOL), since there are many competing search applications. 
+Right now, I am more interested in laying out tiles with symmetries, hence my focus on which features
+to implement.
