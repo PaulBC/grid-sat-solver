@@ -1,10 +1,10 @@
 from collections import deque
 import copy
-from .clausebuilder import Literal, ZERO
-from .symbolic_util import clause_to_string, find_variables, is_comment
+from .clausebuilder import AbstractLiteral, Literal, ZERO
+from .symbolic_util import clause_to_string, find_variables, is_comment, parse_line
 from .tesselation import RotatedRhombus, RotatedSquare, FlippedRectangle
 
-class GridNode(object):
+class GridNode(AbstractLiteral):
   position = None
 
   def neighbor_symbols(self):
@@ -19,11 +19,8 @@ class GridNode(object):
   def is_known(self):
     pass
 
-  def name(self):
-    pass
-
   def __str__(self):
-    return self.name()
+    return self.name
 
   def __hash__(self):
     return hash(self.position)
@@ -31,16 +28,25 @@ class GridNode(object):
   def __eq__(self, other):
     return other.position == self.position
 
-MOORE_DISPLACEMENTS = {
-  'N': (-1, 0),
-  'NE': (-1, 1),
-  'E': (0, 1),
-  'SE': (1, 1),
-  'S': (1, 0),
-  'SW': (1, -1),
-  'W': (0, -1),
-  'NW': (-1, -1)
-}
+  def go(self, *path):
+    '''Traverse a path following neighbors (as string values of path items) and return result.'''
+    node = self
+    for symbol in path:
+      node = node.neighbor(str(symbol))
+    return node
+
+  # properties for subclasses that use AbstractLiteral
+  @property
+  def name(self):
+    pass
+
+  @property
+  def value(self):
+    return True
+
+  @property
+  def tag(self):
+    return None
 
 class Toroidal(object):
   '''An equivalence based on toroidal wrapping.'''
@@ -119,7 +125,23 @@ class PeriodicTimeAdjust(object):
   def __str__(self):
     return 'p%d' % period
 
-CENTER_CELL = 'O'
+CENTER_CELL = Literal('O')
+
+# define literal constants for neighbors
+NEIGHBOR_LITERALS = parse_line('N NE E SE S SW W NW G')
+(N, NE, E, SE, S, SW, W, NW, G) = NEIGHBOR_LITERALS
+NEIGHBOR_SYMBOLS = map(str, NEIGHBOR_LITERALS)
+
+MOORE_DISPLACEMENTS = {k.name: v for k, v in {
+  N: (-1, 0),
+  NE: (-1, 1),
+  E: (0, 1),
+  SE: (1, 1),
+  S: (1, 0),
+  SW: (1, -1),
+  W: (0, -1),
+  NW: (-1, -1)
+}.items()}
 
 class MooreGridNode(GridNode):
   def __init__(self, position, equivalence, timeadjust=PeriodicTimeAdjust(1)):
@@ -129,11 +151,11 @@ class MooreGridNode(GridNode):
     self.orientation = 0
 
   def neighbor_symbols(self):
-    return ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'G']
+    return NEIGHBOR_SYMBOLS
 
   def neighbor(self, symbol):
     i, j, t = self.position
-    if symbol == 'G':
+    if symbol == G.name:
       i, j, t = self.timeadjust.adjust(i, j, t + 1)
     else:
       di, dj = MOORE_DISPLACEMENTS[symbol]
@@ -160,11 +182,12 @@ class MooreGridNode(GridNode):
   def is_known(self):
     return False
 
+  @property
   def name(self):
     return 'c_%d_%d_%d' % self.position
 
   def __repr__(self):
-    return '%s%s:%s' % (self.name(),
+    return '%s%s:%s' % (self.name,
                       ('(%s)' % self.orientation) if self.orientation else '', self.equivalence)
 
 def build_grid(node):
@@ -184,7 +207,7 @@ def build_grid(node):
 
 def bound_cardinality(grid, comparator, size, generation, prefix):
   '''Assign a cardinality constraint to a generation, possibly with a variable prefix.'''
-  cardinality = comparator([Literal(prefix + node.name())
+  cardinality = comparator([Literal(prefix + node.name)
                             for node in grid_layer(grid, generation)], size)
   clauses = ['Population constraint %s %s' % (comparator.__name__, size)]
   clauses.extend(cardinality.adder_clauses)
@@ -207,7 +230,7 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
                           adjust_tag=lambda orientation, tag: tag):
   '''Inflate each template clause using grid cells.'''
   def node_info(node):
-    return (ZERO.name if node.is_outside() else node.name(), node.orientation)
+    return (ZERO.name if node.is_outside() else node.name, node.orientation)
 
   # collect auxiliary variables (ending with $) to associate with grid cells.
   auxiliary = list(filter(lambda x: x.endswith('$'), find_variables(template_constraints)))
@@ -217,9 +240,9 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
   has_zero = False
   for node in grid:
     grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
-    grid_sub[CENTER_CELL] = node_info(node)
+    grid_sub[CENTER_CELL.name] = node_info(node)
     for variable in auxiliary:
-      grid_sub[variable] = (variable + node.name(), node.orientation)
+      grid_sub[variable] = (variable + node.name, node.orientation)
     if ZERO.name in [name for name, orientation in grid_sub.values()]:
       has_zero = True
     grid_subs.append(grid_sub)

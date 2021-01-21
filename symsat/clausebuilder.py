@@ -2,12 +2,8 @@ import re
 
 LITERAL_RE = re.compile(r'(~)?([^\(]+)(\(([0-9]+)\))?')
 
-class Literal(object):
-  def __init__(self, name, value = True, tag = None):
-    self.name = name
-    self.value = value
-    self.tag = tag
-
+class AbstractLiteral(object):
+  '''Base class for assigning literal operations to other classes.'''
   @classmethod
   def parse(cls, string_literal):
     m = LITERAL_RE.match(string_literal)
@@ -41,6 +37,25 @@ class Literal(object):
 
   def is_bool(self):
     return self.tag is None
+
+class Literal(AbstractLiteral):
+  '''Implementation of Literal with fixed values.'''
+  def __init__(self, name, value = True, tag = None):
+    self._name = name
+    self._value = value
+    self._tag = tag
+
+  @property
+  def name(self):
+    return self._name
+
+  @property
+  def value(self):
+    return self._value
+
+  @property
+  def tag(self):
+    return self._tag
 
 # index for generating temporary variables
 VARNUM = 0
@@ -104,7 +119,7 @@ def collect_literals(nested):
   return sorted(collect_literals_recur(nested, set()))
 
 def collect_literals_recur(nested, variables):
-  if isinstance(nested, Literal):
+  if isinstance(nested, AbstractLiteral):
     variables.add(nested)
   elif not isinstance(nested, str):
     for part in nested:
