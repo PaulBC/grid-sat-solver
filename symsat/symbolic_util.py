@@ -1,14 +1,13 @@
 import re
-from .clausebuilder import Literal, ZERO
-from .tags import expand_tag_clauses
+from .clausebuilder import Literal
 
 IMPLIED_BY = '<-'
 
 def parse_line(line):
   '''Parse a line of text with symbols.'''
   line = line.strip()
-  if not line or line.startswith('# '):
-    return line[2:]
+  if not line or line.startswith('#'):
+    return line[1:]
   tokens = line.split()
   # if needed, convert 'B <- A0 ... An' to 'B ~AO ... ~An'
   if len(tokens) >= 2 and tokens[1] == IMPLIED_BY:

@@ -40,7 +40,7 @@ def output_symbolic(symbolic_clauses, out):
   '''Output clauses in symbolic form.'''
   for clause in symbolic_clauses:
     if is_comment(clause):
-      out.write('# %s\n' % clause)
+      out.write('#%s%s\n' % ('' if clause.startswith(' ') else ' ', clause))
     else:
       out.write('%s\n' % ' '.join(map(str, clause)))
 
