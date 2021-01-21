@@ -130,7 +130,7 @@ CENTER_CELL = Literal('O')
 # define literal constants for neighbors
 NEIGHBOR_LITERALS = parse_line('N NE E SE S SW W NW G')
 (N, NE, E, SE, S, SW, W, NW, G) = NEIGHBOR_LITERALS
-NEIGHBOR_SYMBOLS = map(str, NEIGHBOR_LITERALS)
+NEIGHBOR_SYMBOLS = [literal.name for literal in  NEIGHBOR_LITERALS]
 
 MOORE_DISPLACEMENTS = {k.name: v for k, v in {
   N: (-1, 0),
