@@ -46,7 +46,7 @@ providing a more human-readable specification API that includes:
 - ~ and () operators for manipulating literals in Python console.
 - Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
 - Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
-- Pre-defined Moore neighborhood with compass directions NW, N, NE, E, SE, S, SW, W  for neighbors and G (generated)
+- Pre-defined Moore neighborhood with compass directions N, NE, E, SE, S, SW, W, NW for neighbors and G (generated)
   for successor state of O (origin)
 - Grid templates can include helper variables. E.g. `stator$ <- G O` would force `stator` true if booth cell and successor
   are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions ($ indicates it
