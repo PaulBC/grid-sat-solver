@@ -1,6 +1,6 @@
 import sys
 from .dimacs_sat import parse_line, output_dimacs
-from .solver import solve
+from .solver import solve, set_solver
 
 def solve_and_print(input_file):
   dimacs_file = input_file + '.dim'
@@ -23,5 +23,7 @@ def solve_and_print(input_file):
       print('%s %s' % (key, value))
 
 if __name__ == "__main__":
+  if len(sys.argv) > 1:
+    set_solver(sys.argv[2])
   solve_and_print(sys.argv[1])
 
