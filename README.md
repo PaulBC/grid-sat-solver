@@ -2,31 +2,6 @@
 This repo consists of Python code for creating SAT instances for grid based constraint problems (like Conway's Game of Life oscillators).
 "SymSAT" refers to its use of symmetry and symbols in defining these instances.
 
-The purpose of this code is to generate DIMACS files representing SAT problems as input to an external solver by
-providing a more human-readable specification API that includes:
-- Symbolic representation of boolean constraints with named variables.
-- Parsing of clause `a <- b c d` (b & c & d implies a) as a more readable alternative to equivalent
-  `a ~b ~c ~d` (inspired by Prolog :- though we are not limited to Horn clauses).
-- "Tagged" literals representating small integer values. E.g. a(5) means a==5 while ~a(5) means a!=5. 
-  Parentheses are used to provide an overloadable python operator.
-- Generation of cardinality constraints.
-- Integration with SAT solvers to solve instances and translate results back. Currently `lingeling`, `cadical`, and `kissat`
-  are supported though any solver that accepts DIMACS format should work.
-- ~ and () operators for manipulating literals in Python console.
-- Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
-- Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
-- Pre-defined Moore neighborhood with compass directions NW, N, NE, E, SE, S, SW, W  for neighbors and G (generated)
-  for successor state of O (origin)
-- Grid templates can include helper variables. E.g. `stator$ <- G O` would force `stator` true if booth cell and successor
-  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions ($ indicates it
-  is part of template and not a single literal).
-- Comments in DIMACS file to provide a map of variable names to numbers as well as echoing
-  comments from symbolic files.
-- Minimally supported turtle graphics to display hex and rhombus grid.
-- Minimally supported boolean logic for expanding disjunctions into conjunctions of clauses.
-
-I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
-thus far. I may add one time permitting.
 
 ## Quick start
 
@@ -55,6 +30,34 @@ Note that it creates a directory `data` with all the files generated in this pro
 of the formats used by this package (both symbolic and dimacs). Comments in the symbolic file are echoed along
 to DIMACS so it should be possible (though not necessarily easy) to map the constraints in the final SAT 
 problem back to the original specification.
+
+## Overview
+
+The purpose of this code is to generate DIMACS files representing SAT problems as input to an external solver by
+providing a more human-readable specification API that includes:
+- Symbolic representation of boolean constraints with named variables.
+- Parsing of clause `a <- b c d` (b & c & d implies a) as a more readable alternative to equivalent
+  `a ~b ~c ~d` (inspired by Prolog :- though we are not limited to Horn clauses).
+- "Tagged" literals representating small integer values. E.g. a(5) means a==5 while ~a(5) means a!=5. 
+  Parentheses are used to provide an overloadable python operator.
+- Generation of cardinality constraints.
+- Integration with SAT solvers to solve instances and translate results back. Currently `lingeling`, `cadical`, and `kissat`
+  are supported though any solver that accepts DIMACS format should work.
+- ~ and () operators for manipulating literals in Python console.
+- Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
+- Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
+- Pre-defined Moore neighborhood with compass directions NW, N, NE, E, SE, S, SW, W  for neighbors and G (generated)
+  for successor state of O (origin)
+- Grid templates can include helper variables. E.g. `stator$ <- G O` would force `stator` true if booth cell and successor
+  are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions ($ indicates it
+  is part of template and not a single literal).
+- Comments in DIMACS file to provide a map of variable names to numbers as well as echoing
+  comments from symbolic files.
+- Minimally supported turtle graphics to display hex and rhombus grid.
+- Minimally supported boolean logic for expanding disjunctions into conjunctions of clauses.
+
+I have attempted some documentation of APIs through docstrings, but there is no user's or developer's guide
+thus far. I may add one time permitting.
 
 ## Features not implemented yet, but nice to have.
 - Simple way to require equality between grid cells (and generate clauses). E.g. this could enforce still-life
