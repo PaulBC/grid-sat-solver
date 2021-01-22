@@ -1,7 +1,7 @@
 from math import cos, sin, radians
 import turtle
 
-UNITLENGTH = 25
+UNITLENGTH = 20
 
 # in other words, sqrt(3)/2 and 1/2, but this makes the purpose clearer.
 XSCALE = cos(radians(60))

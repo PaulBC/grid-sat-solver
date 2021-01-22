@@ -1,4 +1,5 @@
 import os
+import sys
 from shutil import copyfile
 
 from example.hextile import run_hextile
@@ -10,11 +11,15 @@ from example.stilllife import run_stilllife
 from symsat.dimacs_sat import parse_lines
 from symsat.gridbuilder import Tesselated, Toroidal, Open
 from symsat.rulesymmetry import expand_symmetry, TOTALISTIC, ROTATED_HEX, TOTALISTIC_HEX
+from symsat.solver import set_solver
 from symsat.runsolver import solve_and_print
 from symsat.tesselation import CrossSurface, RotatedSquare, RotatedRhombus
 
 if not os.path.exists('data'):
     os.makedirs('data')
+
+if len(sys.argv) > 1:
+  set_solver(sys.argv[1])
 
 def wait_for_enter(msg='===== Press [ENTER] or [RETURN] to continue ====='):
   '''Wait for user to hit enter before proceeding.'''
@@ -120,7 +125,7 @@ wait_for_enter()
 
 RHOMBUS_CONSTRAINTS = parse_lines(RHOMBUS_TEMPLATE)
 
-run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(12)), 120, -20)
+run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(15)), 120, -20)
 wait_for_enter()
 
 print('Solving ad hoc SAT file on boolean literals.')

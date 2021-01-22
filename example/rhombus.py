@@ -40,11 +40,20 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
 
   print(inverse_adjust)
 
-  # add some rhombuses to insure non-trival results
-  tag_clauses.append((Literal('c_1_1_0')(2),))
-  tag_clauses.append((Literal('c_3_5_0')(0),))
-  tag_clauses.append((Literal('c_7_2_0')(1),))
-  tag_clauses.append((Literal('c_5_7_0')(1),))
+  # add some rhombuses to ensure non-trival results
+  n = root.equivalence.rowsize
+  tag_clauses.append((Literal('c_1_1_0')(0),))
+  tag_clauses.append((Literal('c_3_5_0')(1),))
+  tag_clauses.append((Literal('c_7_2_0')(2),))
+  tag_clauses.append((Literal('c_5_7_0')(0),))
+  tag_clauses.append((Literal('c_9_7_0')(1),))
+  tag_clauses.append((Literal('c_3_11_0')(2),))
+  tag_clauses.append((Literal('c_%d_%d_0' % (n // 2 - 3, n - 1) )(1),))
+  tag_clauses.append((Literal('c_%d_%d_0' % (n // 2 + 3, n - 1) )(1),))
+  tag_clauses.append((Literal('c_%d_%d_0' % (n - 1, n // 2 - 3) )(0),))
+  tag_clauses.append((Literal('c_%d_%d_0' % (n - 1, n // 2 + 2) )(0),))
+
+  clauses = expand_tag_clauses(tag_clauses)
 
   clauses = expand_tag_clauses(tag_clauses)
 
@@ -82,5 +91,7 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
     print((' ' * (width - i))  + ' '.join(str(x) if x is not None else '.' for x in cells[i]))
 
 if __name__ == "__main__":
-  run_rhombus(sys.argv[1], RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(10)), -100, 100)
+  if len(sys.argv) > 2:
+    set_solver(sys.argv[2])
+  run_rhombus(sys.argv[1], RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(15)), -100, 100)
   input('Press enter to exit.')
