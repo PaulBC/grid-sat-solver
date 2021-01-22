@@ -10,6 +10,8 @@ providing a more human-readable specification API that includes:
 - "Tagged" literals representating small integer values. E.g. a(5) means a==5 while ~a(5) means a!=5. 
   Parentheses are used to provide an overloadable python operator.
 - Generation of cardinality constraints.
+- Integration with SAT solvers to solve instances and translate results back. Currently `lingeling`, `cadical`, and `kissat`
+  are supported though any solver that accepts DIMACS format should work.
 - ~ and () operators for manipulating literals in Python console.
 - Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
 - Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
@@ -29,9 +31,9 @@ thus far. I may add one time permitting.
 ## Quick start
 
 The simplest way to observe what this package does is to run the demo. It requires the SAT solver `lingeling`
-to be installed, though it should be possible to use other SAT solvers as long as they accept DIMACS format.
-I have tested these instructions on MacOS 10.15.17. They should work in most environments (Unix or Windows
-console), though in the latter, it might be necessary to change how lingeling is invoked.
+to be installed. Solvers `cadical` and `kissat` can be configured to run and it should be possible to use other SAT solvers as
+long as they accept DIMACS format. I have tested these instructions on MacOS 10.15.17. They should work in most
+environments (Unix or Windows console), though in the latter, it might be necessary to change how lingeling is invoked.
 
 I assume Python 3 throughout, but I have attempted to keep it compatible with Python 2. You must have Python
 installed and it must be able to do turtle graphics (which seems to be standard).
