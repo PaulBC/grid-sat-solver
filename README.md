@@ -62,6 +62,9 @@ thus far. I may add one time permitting.
 ## Features not implemented yet, but nice to have.
 - Simple way to require equality between grid cells (and generate clauses). E.g. this could enforce still-life
   behavior on  part of a Life pattern.
+- Positional clauses, i.e. that could enforce that a subset of cell assignments (e.g. representing a glider
+  in a collision) are all present relative to some origin that could be expressed by k literals representing
+   2^k placements.
 - Set grid cell values in initial generation or later (using single-literal clauses).
 - Assign region of grid cells using picture format (e.g. using `.` `*` `?`)
 - Extensions to syntax, such as expressing cardinality or symmetry in the input file. I have mostly
