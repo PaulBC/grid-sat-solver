@@ -75,7 +75,7 @@ run_p2patch('data/p2patch', LIFE_CONSTRAINTS + parse_lines(STATOR_TEMPLATE),
 print('Found one with no stators ("phoenix" pattern)')
 print('Next searching for 4 stators.')
 wait_for_enter()
-run_p2patch('data/p2patch', LIFE_CONSTRAINTS + parse_lines(STATOR_TEMPLATE),
+run_p2patch('data/p2patch+4', LIFE_CONSTRAINTS + parse_lines(STATOR_TEMPLATE),
             Tesselated(RotatedSquare(12)), 4)
 print('Found one with 4 stators.')
 wait_for_enter()

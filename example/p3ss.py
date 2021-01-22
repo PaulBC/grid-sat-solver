@@ -51,5 +51,7 @@ def run_p3ss(fileroot, life_constraints):
     print("".join(['*' if x else '.' for x in valuegrid[0][i]]))
 
 if __name__ == "__main__":
+  if len(sys.argv) > 2:
+    set_solver(sys.argv[2])
   run_p3ss(sys.argv[1], LIFE_CONSTRAINTS)
 
