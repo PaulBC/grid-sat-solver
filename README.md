@@ -37,7 +37,7 @@ The purpose of this code is to generate DIMACS files representing SAT problems a
 providing a more human-readable specification API that includes:
 - Symbolic representation of boolean constraints with named variables.
 - Parsing of clause `a <- b c d` (b & c & d implies a) as a more readable alternative to equivalent
-  `a ~b ~c ~d` (inspired by Prolog :- though we are not limited to Horn clauses).
+  `a ~b ~c ~d` (inspired by Prolog `:-` though we are not limited to Horn clauses).
 - "Tagged" literals representating small integer values. E.g. a(5) means a==5 while ~a(5) means a!=5. 
   Parentheses are used to provide an overloadable python operator.
 - Generation of cardinality constraints.
