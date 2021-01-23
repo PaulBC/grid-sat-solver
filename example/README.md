@@ -1,4 +1,4 @@
-This file contains examples, mostly to be used by demo.py. 
+This directory contains examples, mostly to be used by demo.py. 
 
 Each Python example demonstrates the setup for a search. They can be run separately from the parent directory,
 e.g. as
