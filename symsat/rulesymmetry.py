@@ -1,5 +1,5 @@
 from .clausebuilder import Literal, to_pairs, from_pairs
-from .dimacs_sat import is_comment
+from .symbolic_util import is_comment, parse_line
 
 def to_mapping(cycles):
   '''Convert a list of cycles into a permutation mapping.'''
@@ -38,16 +38,9 @@ def find_closure(basis, labeling):
 
 # center cell original value and after rule generation
 O = Literal('O')
-G = Literal('G')
-# neighboring cells given as compass directions
-N = Literal('N')
-NE = Literal('NE')
-E = Literal('E')
-SE = Literal('SE')
-S = Literal('S')
-SW = Literal('SW')
-W = Literal('W')
-NW = Literal('NW')
+# define literal constants for neighbors (compass directions and G for next generation)
+NEIGHBOR_LITERALS = parse_line('N NE E SE S SW W NW G')
+(N, NE, E, SE, S, SW, W, NW, G) = NEIGHBOR_LITERALS
 
 # Permutations for constructing symmetry bases
 ROTATE_CLOCKWISE = to_mapping([(NE, SE, SW, NW), (N, E, S, W)])

@@ -1,6 +1,7 @@
 from collections import deque
 import copy
 from .clausebuilder import AbstractLiteral, Literal, ZERO
+from .rulesymmetry import NEIGHBOR_LITERALS, N, NE, E, SE, S, SW, W, NW, G
 from .symbolic_util import clause_to_string, find_variables, is_comment, parse_line
 from .tesselation import RotatedRhombus, RotatedSquare, FlippedRectangle
 
@@ -127,11 +128,6 @@ class PeriodicTimeAdjust(object):
 
 CENTER_CELL = Literal('O')
 
-# define literal constants for neighbors
-NEIGHBOR_LITERALS = parse_line('N NE E SE S SW W NW G')
-(N, NE, E, SE, S, SW, W, NW, G) = NEIGHBOR_LITERALS
-NEIGHBOR_SYMBOLS = [literal.name for literal in  NEIGHBOR_LITERALS]
-
 MOORE_DISPLACEMENTS = {k.name: v for k, v in {
   N: (-1, 0),
   NE: (-1, 1),
@@ -142,6 +138,9 @@ MOORE_DISPLACEMENTS = {k.name: v for k, v in {
   W: (0, -1),
   NW: (-1, -1)
 }.items()}
+
+# get neighbor symbols as strings.
+NEIGHBOR_SYMBOLS = [literal.name for literal in  NEIGHBOR_LITERALS]
 
 class MooreGridNode(GridNode):
   def __init__(self, position, equivalence, timeadjust=PeriodicTimeAdjust(1)):
