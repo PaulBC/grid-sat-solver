@@ -38,8 +38,8 @@ providing a more human-readable specification API that includes:
 - Symbolic representation of boolean constraints with named variables.
 - Parsing of clause `a <- b c d` (b & c & d implies a) as a more readable alternative to equivalent
   `a ~b ~c ~d` (inspired by Prolog `:-` though we are not limited to Horn clauses).
-- "Tagged" literals representating small integer values. E.g. a(5) means a==5 while ~a(5) means a!=5. 
-  Parentheses are used to provide an overloadable python operator.
+- "Tagged" literals representating small integer values implemented by assigning bits to boolean literals.
+  E.g. a(5) means a==5 while ~a(5) means a!=5. Parentheses are used to provide an overloadable python operator.
 - Generation of cardinality constraints.
 - Integration with SAT solvers to solve instances and translate results back. Currently `lingeling`, `cadical`, and `kissat`
   are supported though any solver that accepts DIMACS format should work.
