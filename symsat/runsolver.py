@@ -23,7 +23,6 @@ def solve_and_print(input_file):
       print('%s %s' % (key, value))
 
 if __name__ == "__main__":
-  if len(sys.argv) > 1:
+  if len(sys.argv) > 2:
     set_solver(sys.argv[2])
   solve_and_print(sys.argv[1])
-
