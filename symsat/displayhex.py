@@ -1,7 +1,7 @@
 from math import cos, sin, radians
 import turtle
 
-UNITLENGTH = 20
+unitlength = 20
 
 # in other words, sqrt(3)/2 and 1/2, but this makes the purpose clearer.
 XSCALE = cos(radians(60))
@@ -10,8 +10,8 @@ YSCALE = sin(radians(60))
 # a stack to restore state after drawing
 TURTLE_STACK = []
 
-def position(i, j):
-  return (j - i * XSCALE) * UNITLENGTH, -i * UNITLENGTH * YSCALE
+def position(i, j, unitlength):
+  return (j - i * XSCALE) * unitlength, -i * unitlength * YSCALE
 
 def push_state():
   TURTLE_STACK.append((turtle.position(), turtle.heading(), turtle.isdown()))
@@ -26,11 +26,11 @@ def pop_state():
   else:
     turtle.penup()
 
-def draw_hex(fillcolor=None):
+def draw_hex(unitlength, fillcolor=None):
   push_state()
   if fillcolor:
     turtle.fillcolor(fillcolor)
-  side = UNITLENGTH * XSCALE / YSCALE
+  side = unitlength * XSCALE / YSCALE
   turtle.penup()
   turtle.left(90)
   turtle.forward(side)
@@ -45,16 +45,16 @@ def draw_hex(fillcolor=None):
     turtle.end_fill()
   pop_state()
 
-def draw_rhombus(rotation, fillcolor=None):
+def draw_rhombus(unitlength, rotation, fillcolor=None):
   push_state()
   if fillcolor:
     turtle.fillcolor(fillcolor)
   turtle.penup()
   turtle.left(90)
   turtle.right(rotation)
-  turtle.forward(UNITLENGTH * XSCALE / YSCALE)
+  turtle.forward(unitlength * XSCALE / YSCALE)
   turtle.right(150)
-  side = UNITLENGTH
+  side = unitlength
   turtle.pendown()
   if fillcolor:
     turtle.begin_fill()
@@ -69,14 +69,14 @@ def draw_rhombus(rotation, fillcolor=None):
   pop_state()
 
 RHOMBUS_COLORS = ['lightblue', 'salmon', 'lightgreen']
-def rhombus_cell(i, j, rotation):
+def rhombus_cell(i, j, rotation, unitlength):
   push_state()
-  (x, y) = position(i, j)
+  (x, y) = position(i, j, unitlength)
   turtle.setposition(turtle.xcor() + x, turtle.ycor() + y)
-  draw_rhombus(rotation * 120, RHOMBUS_COLORS[rotation])
+  draw_rhombus(unitlength, rotation * 120, RHOMBUS_COLORS[rotation])
   pop_state()
 
-def draw_rhombus_cells(xorigin, yorigin, cells):
+def draw_rhombus_cells(xorigin, yorigin, cells, unitlength=20):
   turtle.tracer(0, 0)
   turtle.hideturtle()
   turtle.speed(0)
@@ -86,19 +86,19 @@ def draw_rhombus_cells(xorigin, yorigin, cells):
   for i in range(len(cells)):
     for j in range(len(cells[i])):
       if cells[i][j] is not None:
-        rhombus_cell(i, j, cells[i][j])
+        rhombus_cell(i, j, cells[i][j], unitlength)
   pop_state()
   turtle.update()
 
 HEX_COLORS = ['black', 'tan']
-def hex_cell(i, j, value):
+def hex_cell(i, j, value, unitlength):
   push_state()
-  (x, y) = position(i, j)
+  (x, y) = position(i, j, unitlength)
   turtle.setposition(turtle.xcor() + x, turtle.ycor() + y)
-  draw_hex(HEX_COLORS[value])
+  draw_hex(unitlength, HEX_COLORS[value])
   pop_state()
 
-def draw_hex_cells(xorigin, yorigin, cells):
+def draw_hex_cells(xorigin, yorigin, cells, unitlength=20):
   turtle.tracer(0, 0)
   turtle.hideturtle()
   turtle.speed(0)
@@ -109,6 +109,6 @@ def draw_hex_cells(xorigin, yorigin, cells):
   for i in range(len(cells)):
     for j in range(len(cells[i])):
       if cells[i][j] is not None:
-        hex_cell(i, j, cells[i][j])
+        hex_cell(i, j, cells[i][j], unitlength)
   pop_state()
   turtle.update()
