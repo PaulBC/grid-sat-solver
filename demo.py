@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from shutil import copyfile
 
 from example.hextile import run_hextile
@@ -7,6 +8,7 @@ from example.p3ss import run_p3ss
 from example.rhombus import run_rhombus
 from example.p2patch import run_p2patch
 from example.stilllife import run_stilllife
+from example.triominoes import run_triominoes, ALL_CLAUSES, TRI_TAGS
 
 from symsat.dimacs_sat import parse_lines
 from symsat.gridbuilder import Tesselated, Toroidal, Open
@@ -80,6 +82,34 @@ run_p2patch('data/p2patch+4', LIFE_CONSTRAINTS + parse_lines(STATOR_TEMPLATE),
 print('Found one with 4 stators.')
 wait_for_enter()
 
+print('Solving ad hoc SAT file on boolean literals.')
+file = 'example/boolean_sat.sym'
+tmpfile = file.replace('example', 'data')
+copyfile(file, tmpfile)
+print('Input file is %s, which contains:' % file)
+with open(file) as inp:
+  for line in inp:
+    print(line.rstrip())
+wait_for_enter()
+
+print('Solve using "python -m symsat.runsolver %s"' % file)
+solve_and_print(tmpfile)
+wait_for_enter()
+
+print('Solving ad hoc SAT file on literal with tags')
+file = 'example/coloring.sym'
+tmpfile = file.replace('example', 'data')
+copyfile(file, tmpfile)
+print('Input file is %s, which contains:' % file)
+with open(file) as inp:
+  for line in inp:
+    print(line.rstrip())
+wait_for_enter()
+
+print('Solve using "python -m symsat.runsolver %s"' % file)
+solve_and_print(tmpfile)
+wait_for_enter()
+
 HEX_ROTATED_TEMPLATE = '''
   # birth on 2o
    G <- NW N ~E ~SE ~S ~W
@@ -128,32 +158,15 @@ RHOMBUS_CONSTRAINTS = parse_lines(RHOMBUS_TEMPLATE)
 run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(15)), 120, -20)
 wait_for_enter()
 
-print('Solving ad hoc SAT file on boolean literals.')
-file = 'example/boolean_sat.sym'
-tmpfile = file.replace('example', 'data')
-copyfile(file, tmpfile)
-print('Input file is %s, which contains:' % file)
-with open(file) as inp:
-  for line in inp:
-    print(line.rstrip())
+print('Triomino constraints for hex coloring.')
+print('\n'.join(map(str, TRI_TAGS)))
+print('See example/triominoes.py for more detailed setup.')
+print('Setting up SAT instance and running solver...')
+run_triominoes('data/tri', ALL_CLAUSES, Toroidal(14, 15, -7), -300, 20, 12)
 wait_for_enter()
-
-print('Solve using "python -m symsat.runsolver %s"' % file)
-solve_and_print(tmpfile)
-wait_for_enter()
-
-print('Solving ad hoc SAT file on literal with tags')
-file = 'example/coloring.sym'
-tmpfile = file.replace('example', 'data')
-copyfile(file, tmpfile)
-print('Input file is %s, which contains:' % file)
-with open(file) as inp:
-  for line in inp:
-    print(line.rstrip())
-wait_for_enter()
-
-print('Solve using "python -m symsat.runsolver %s"' % file)
-solve_and_print(tmpfile)
 
 print()
 print('Demo is complete. See data/ directory for generated files.')
+
+# Just keep pictures up for a little while in case user hit return too many times
+time.sleep(3)

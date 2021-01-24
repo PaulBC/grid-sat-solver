@@ -45,7 +45,7 @@ ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + MISC_CLAUSES
 
 COLORS =  COLORS = ['#4f1111', '#ffffff', '#ffff4f', '#114f11', '#11114f']
 
-def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig):
+def run_triominoes(fileroot, all_clauses, equivalence, xorig, yorig, cellsize):
 
   dimacs_file = fileroot + '.dim'
   tag_file = fileroot + '.tag'
@@ -86,8 +86,7 @@ def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig):
       row.append(valuegrid[0][it][jt])
     cells.append(row)
 
-  turtle.bgcolor('lightblue')
-  draw_hex_cells(xorig, yorig, cells, 20, COLORS)
+  draw_hex_cells(xorig, yorig, cells, cellsize, COLORS)
 
   print()
   print('Hex tile patch with symmetry %s' % equivalence)
@@ -103,6 +102,9 @@ if __name__ == '__main__':
   shift = -7
   if len(sys.argv) > 5:
     rows, columns, shift = map(int, sys.argv[3:6])
+  cellsize = 20
+  if len(sys.argv) > 6:
+    cellsize = int(sys.argv[6])
 
-  run_triomino(sys.argv[1], ALL_CLAUSES, Toroidal(rows, columns, shift), -250, 350)
+  run_triominoes(sys.argv[1], ALL_CLAUSES, Toroidal(rows, columns, shift), -250, 350, cellsize)
   input('Press enter to exit.')
