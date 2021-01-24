@@ -64,7 +64,8 @@ class Toroidal(object):
     return False
 
   def __str__(self):
-    return '%dX%dt' % (self.rowsize, self.columnsize)
+    return '%dX%d%st' % (self.rowsize, self.columnsize,
+                         '%+d' % self.column_shift if self.column_shift else '')
 
 class Open(object):
   '''An open grid assumed 0 outside bounds.'''
