@@ -29,23 +29,20 @@ TRI_TAGS = [
   (2, 1, 0),
 ]
 
-# base literals for upper and lower triangle around cell
-LOWER_TRI = (O, W, S)
-UPPER_TRI = (O, E, N)
-
-LOWER_MATCHES = expand_symmetry(ROTATED_TRI_BELOW, all_tag_tuples(LOWER_TRI, TRI_TAGS))
-UPPER_MATCHES = expand_symmetry(ROTATED_TRI_ABOVE, all_tag_tuples(UPPER_TRI, TRI_TAGS))
+LOWER_MATCHES = expand_symmetry(ROTATED_TRI_BELOW, all_tag_tuples((O, W, S), TRI_TAGS))
+UPPER_MATCHES = expand_symmetry(ROTATED_TRI_ABOVE, all_tag_tuples((O, E, N), TRI_TAGS))
 LOWER_CLAUSES = ['Clauses for lower triomino match'] + make_matching_clauses(LOWER_MATCHES)
 UPPER_CLAUSES = ['Clauses for upper triomino match'] + make_matching_clauses(UPPER_MATCHES)
-PREFER_3_4 = expand_symmetry(ROTATED_HEX, parse_lines('''
-  Do not use 0 label when 3-4 cells in straight line.'
+MISC_CLAUSES = expand_symmetry(ROTATED_HEX, parse_lines('''
+  # Do not use 0 label when 3-4 cells in straight line.
   ~W(3) ~O(0) ~E(3)
   ~W(4) ~O(0) ~E(4)
+  # Rule out trivial 0-1-2 coloring
+  ~O(0) ~SW(0) ~NE(0) ~NW(2) ~N(1) ~E(2) ~SE(1) ~S(2) ~W(1)
   '''))
 
-ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + PREFER_3_4
+ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + MISC_CLAUSES
 
-COLORS =  COLORS = ['darkred', 'white', 'yellow', 'darkgreen', 'darkblue']
 COLORS =  COLORS = ['#4f1111', '#ffffff', '#ffff4f', '#114f11', '#11114f']
 
 def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig):
@@ -101,9 +98,9 @@ def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig):
 if __name__ == '__main__':
   if len(sys.argv) > 2:
     set_solver(sys.argv[2])
-  rows = 10
-  columns = 13
-  shift = -5
+  rows = 14
+  columns = 15
+  shift = -7
   if len(sys.argv) > 5:
     rows, columns, shift = map(int, sys.argv[3:6])
 
