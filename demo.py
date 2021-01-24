@@ -169,4 +169,4 @@ print()
 print('Demo is complete. See data/ directory for generated files.')
 
 # Just keep pictures up for a little while in case user hit return too many times
-time.sleep(3)
+time.sleep(5)
