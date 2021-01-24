@@ -90,7 +90,7 @@ def draw_rhombus_cells(xorigin, yorigin, cells, unitlength=20):
   pop_state()
   turtle.update()
 
-HEX_COLORS = ['black', 'tan']
+HEX_COLORS = ['black', 'tan', 'red', 'green', 'blue', 'yellow', 'white']
 def hex_cell(i, j, value, unitlength, colors):
   push_state()
   (x, y) = position(i, j, unitlength)

@@ -13,6 +13,7 @@ parser.add_argument('--format', default='list',
                              'hex_turtle', 'rhombus_turtle', 'exclude'],
                     help='Format to ouput solution.')
 parser.add_argument('--hex_size', type=int, default=20, help='Size of hex or rhombus for turtle.')
+parser.add_argument('--hex_colors', type=str, default='black,tan', help='Hex colors (comma-separated) for turtle.')
 args = parser.parse_args()
 
 def wait_for_enter(msg='===== Press [ENTER] or [RETURN] to continue ====='):
@@ -62,7 +63,7 @@ def output_hex_turtle(results, xorig=-100, yorig=100):
     for j in range(len(grid[0][0])):
       row.append(grid[0][i][j])
     cells.append(row)
-  draw_hex_cells(xorig, yorig, cells, args.hex_size)
+  draw_hex_cells(xorig, yorig, cells, args.hex_size, colors=args.hex_colors.split(','))
   wait_for_enter()
 
 def output_rhombus_turtle(results, xorig=-100, yorig=100):
