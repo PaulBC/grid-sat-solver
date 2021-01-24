@@ -24,10 +24,10 @@ class Labeling(object):
 def find_closure(basis, labeling):
   '''Find the closure of a basis of basis applied to a labeling.'''
   all_labelings = set([Labeling(labeling)])
-  size_was = 0
+  si_PERMe_was = 0
   inverses = [{v: k for k, v in permutation.items()} for permutation in basis]
-  while size_was < len(all_labelings):
-    size_was = len(all_labelings)
+  while si_PERMe_was < len(all_labelings):
+    si_PERMe_was = len(all_labelings)
     for labeling in list(all_labelings):
       for mapping in inverses:
         new_labeling = []
@@ -42,36 +42,36 @@ O = Literal('O')
 NEIGHBOR_LITERALS = parse_line('N NE E SE S SW W NW G')
 (N, NE, E, SE, S, SW, W, NW, G) = NEIGHBOR_LITERALS
 
-# Permutations for constructing symmetry bases
-ROTATE_CLOCKWISE = to_mapping([(NE, SE, SW, NW), (N, E, S, W)])
-ROTATE_CLOCKWISE_HEX = to_mapping([(NW, N, E, SE, S, W)])
-MIX_CORNERS = to_mapping([(NE, SE)])
-MIX_SIDES = to_mapping([(N, E)])
-MIX_CORNERS_SIDES = to_mapping([(NW, N)])
-FLIP_DIAGONAL = to_mapping([(N, E), (NW, SE), (W, S)]) 
-ROTATE_TRI_BELOW = to_mapping([(O, W, S)])
-ROTATE_TRI_ABOVE = to_mapping([(O, E, N)])
+# Permutations for constructing symmetry bases (_PERM suffix so they won't be confused with bases)
+ROTATE_CLOCKWISE_PERM = to_mapping([(NE, SE, SW, NW), (N, E, S, W)])
+ROTATE_CLOCKWISE_HEX_PERM = to_mapping([(NW, N, E, SE, S, W)])
+MIX_CORNERS_PERM = to_mapping([(NE, SE)])
+MIX_SIDES_PERM = to_mapping([(N, E)])
+MIX_CORNERS_SIDES_PERM = to_mapping([(NW, N)])
+FLIP_DIAGONAL_PERM = to_mapping([(N, E), (NW, SE), (W, S)])
+ROTATE_TRI_BELOW_PERM = to_mapping([(O, W, S)])
+ROTATE_TRI_ABOVE_PERM = to_mapping([(O, E, N)])
 
 # Some common symmetry bases
-ROTATED = [ROTATE_CLOCKWISE]
-ROTATED_HEX = [ROTATE_CLOCKWISE_HEX]
-ROTATED_FLIPPED = [ROTATE_CLOCKWISE, FLIP_DIAGONAL]
-ROTATED_FLIPPED_HEX = [ROTATE_CLOCKWISE_HEX, FLIP_DIAGONAL]
-SEMI_TOTALISTIC = [ROTATE_CLOCKWISE, MIX_CORNERS, MIX_SIDES]
-TOTALISTIC = [ROTATE_CLOCKWISE, MIX_CORNERS, MIX_CORNERS_SIDES]
-TOTALISTIC_HEX = [ROTATE_CLOCKWISE_HEX, MIX_CORNERS_SIDES]
-ROTATED_TRI_BELOW = [ROTATE_TRI_BELOW]
-ROTATED_TRI_ABOVE = [ROTATE_TRI_ABOVE]
+ROTATED = [ROTATE_CLOCKWISE_PERM]
+ROTATED_HEX = [ROTATE_CLOCKWISE_HEX_PERM]
+ROTATED_FLIPPED = [ROTATE_CLOCKWISE_PERM, FLIP_DIAGONAL_PERM]
+ROTATED_FLIPPED_HEX = [ROTATE_CLOCKWISE_HEX_PERM, FLIP_DIAGONAL_PERM]
+SEMI_TOTALISTIC = [ROTATE_CLOCKWISE_PERM, MIX_CORNERS_PERM, MIX_SIDES_PERM]
+TOTALISTIC = [ROTATE_CLOCKWISE_PERM, MIX_CORNERS_PERM, MIX_CORNERS_SIDES_PERM]
+TOTALISTIC_HEX = [ROTATE_CLOCKWISE_HEX_PERM, MIX_CORNERS_SIDES_PERM]
+ROTATED_TRI_BELOW = [ROTATE_TRI_BELOW_PERM]
+ROTATED_TRI_ABOVE = [ROTATE_TRI_ABOVE_PERM]
 
 def all_symmetries(symmetry, literals):
   '''Returns a list of permutations of the given literals based on a symmetry basis.'''
   return [tuple(x for x in from_pairs(permuted))
           for permuted in find_closure(symmetry, to_pairs(literals))] 
 
-def expand_symmetry(symmetry, clauses):
-  '''Expands a list of clauses by given symmetry.'''
+def expand_symmetry(symmetry, literal_tuples):
+  '''Expands a list of literal tuples by given symmetry.'''
   expanded = []
-  for clause in clauses:
+  for clause in literal_tuples:
     if is_comment(clause):
       expanded.append(clause)
     else:
@@ -79,5 +79,5 @@ def expand_symmetry(symmetry, clauses):
   return expanded
 
 def to_conjunction(literals):
-  '''Wraps each literal in a list in a singleton tuple to make it a conjunction of clauses.'''
+  '''Wraps each literal in a list in a singleton tuple to make it a conjunction of literal_tuples.'''
   return [(x,) for x in literals]

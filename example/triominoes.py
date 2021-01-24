@@ -11,6 +11,10 @@ from symsat.dimacs_sat import *
 from symsat.solver import *
 from symsat.tags import *
 
+# This implements a hex coloring that can be thought of as matching triominos with specific corner
+# coloring. Triominoes can be rotated and appear upside down and right side up, constraining
+# neighborhoods of adjacent triples of hex cells.
+
 # tags for triomino matching
 TRI_TAGS = [
   (1, 2, 3),
@@ -29,22 +33,22 @@ TRI_TAGS = [
 LOWER_TRI = (O, W, S)
 UPPER_TRI = (O, E, N)
 
-LOWER_MATCHES = [match for tags in TRI_TAGS
-                 for match in all_symmetries(ROTATED_TRI_BELOW, tag_tuples(LOWER_TRI, tags))]
-UPPER_MATCHES = [match for tags in TRI_TAGS
-                 for match in all_symmetries(ROTATED_TRI_ABOVE, tag_tuples(UPPER_TRI, tags))]
+LOWER_MATCHES = expand_symmetry(ROTATED_TRI_BELOW, all_tag_tuples(LOWER_TRI, TRI_TAGS))
+UPPER_MATCHES = expand_symmetry(ROTATED_TRI_ABOVE, all_tag_tuples(UPPER_TRI, TRI_TAGS))
 LOWER_CLAUSES = ['Clauses for lower triomino match'] + make_matching_clauses(LOWER_MATCHES)
 UPPER_CLAUSES = ['Clauses for upper triomino match'] + make_matching_clauses(UPPER_MATCHES)
-USES_ZERO = parse_lines('''
-  # keep track of when 0 is used for cardinality bounds
-  zero$ <- O(0)
-''')
+PREFER_3_4 = expand_symmetry(ROTATED_HEX, parse_lines('''
+  Do not use 0 label when 3-4 cells in straight line.'
+  ~W(3) ~O(0) ~E(3)
+  ~W(4) ~O(0) ~E(4)
+  '''))
 
-ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + USES_ZERO
+ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + PREFER_3_4
 
 COLORS =  COLORS = ['darkred', 'white', 'yellow', 'darkgreen', 'darkblue']
+COLORS =  COLORS = ['#4f1111', '#ffffff', '#ffff4f', '#114f11', '#11114f']
 
-def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig, maxzero):
+def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig):
 
   dimacs_file = fileroot + '.dim'
   tag_file = fileroot + '.tag'
@@ -60,9 +64,6 @@ def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig, maxzero):
 
   # expand clauses to booleans
   clauses = expand_tag_clauses(tag_clauses)
-
-  # add clauses for a cardinality bounds
-  clauses.extend(bound_helper(grid, LessThanOrEqual, maxzero, 'zero', 0))
 
   # write dimacs file for solver
   with open(dimacs_file, 'w') as out:
@@ -81,9 +82,9 @@ def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig, maxzero):
   valuegrid = get_value_grid('c', results)
 
   cells = []
-  for i in range(3 * len(valuegrid[0])):
+  for i in range(2 * len(valuegrid[0])):
     row = []
-    for j in range(3 * len(valuegrid[0][0])):
+    for j in range(2 * len(valuegrid[0][0])):
       it, jt, _ = root.equivalence.to_equivalent(i, j)
       row.append(valuegrid[0][it][jt])
     cells.append(row)
@@ -93,13 +94,18 @@ def run_triomino(fileroot, all_clauses, equivalence, xorig, yorig, maxzero):
 
   print()
   print('Hex tile patch with symmetry %s' % equivalence)
-  width = len(valuegrid[0][0])
-  for i in range(len(valuegrid[0])):
-    print((' ' * (width - i)) + ' '.join([str(cells[i][j]) for j in range(width)]))
+  width = len(valuegrid[0])
+  for i in range(width):
+    print((' ' * (width - i)) + ' '.join([str(cells[i][j]) for j in range(len(valuegrid[0][0]))]))
 
 if __name__ == '__main__':
   if len(sys.argv) > 2:
     set_solver(sys.argv[2])
-  maxzero = 100 if len(sys.argv) <= 3 else int(sys.argv[3])
-  run_triomino(sys.argv[1], ALL_CLAUSES, Toroidal(10, 13, -5), -250, 250, maxzero)
+  rows = 10
+  columns = 13
+  shift = -5
+  if len(sys.argv) > 5:
+    rows, columns, shift = map(int, sys.argv[3:6])
+
+  run_triomino(sys.argv[1], ALL_CLAUSES, Toroidal(rows, columns, shift), -250, 350)
   input('Press enter to exit.')
