@@ -72,6 +72,10 @@ def make_matching_clauses(literal_tuples):
   disjunction = [[(Literal(name, False, i),) for i in range(maxtags[name] + 1)] for name in names]
   return sorted(reduce(expand_disjunction, disjunction).difference(inverse_clauses))
 
+def tag_tuples(literals, tags):
+  '''Apply tuple of tags to a tuple of literals.'''
+  return tuple(x(tag) for x, tag in zip(literals, tags))
+
 def less_than(literal, limit):
   '''Generate clauses to set an upper limit on a tag literal.'''
   if limit <= 0:

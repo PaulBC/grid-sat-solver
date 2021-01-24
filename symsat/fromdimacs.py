@@ -26,7 +26,7 @@ def wait_for_enter(msg='===== Press [ENTER] or [RETURN] to continue ====='):
 def output_list(results):
   '''Output list of results as names and values, one per line.'''
   for key, value in results:
-    if key <= 'z':
+    if key <= '{':
       print('%s %s' % (key, value))
 
 def output_life(results):
@@ -82,7 +82,7 @@ def output_exclude(results):
      which can be added to symbolic SAT instance to rule it out.'''
   print(' '.join([str(Literal(name, isinstance(value, bool) and not value,
                               value if not isinstance(value, bool) else None))
-                  for name, value in results if name <= 'z']))
+                  for name, value in results if name <= '{']))
 
 if __name__ == "__main__":
   # get results

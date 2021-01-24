@@ -55,8 +55,6 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
 
   clauses = expand_tag_clauses(tag_clauses)
 
-  clauses = expand_tag_clauses(tag_clauses)
-
   # write dimacs file for solver
   with open(dimacs_file, 'w') as out:
     output_dimacs(tag_clauses, out)

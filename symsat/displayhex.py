@@ -91,14 +91,14 @@ def draw_rhombus_cells(xorigin, yorigin, cells, unitlength=20):
   turtle.update()
 
 HEX_COLORS = ['black', 'tan']
-def hex_cell(i, j, value, unitlength):
+def hex_cell(i, j, value, unitlength, colors):
   push_state()
   (x, y) = position(i, j, unitlength)
   turtle.setposition(turtle.xcor() + x, turtle.ycor() + y)
-  draw_hex(unitlength, HEX_COLORS[value])
+  draw_hex(unitlength, colors[value])
   pop_state()
 
-def draw_hex_cells(xorigin, yorigin, cells, unitlength=20):
+def draw_hex_cells(xorigin, yorigin, cells, unitlength=20, colors=HEX_COLORS):
   turtle.tracer(0, 0)
   turtle.hideturtle()
   turtle.speed(0)
@@ -109,6 +109,6 @@ def draw_hex_cells(xorigin, yorigin, cells, unitlength=20):
   for i in range(len(cells)):
     for j in range(len(cells[i])):
       if cells[i][j] is not None:
-        hex_cell(i, j, cells[i][j], unitlength)
+        hex_cell(i, j, cells[i][j], unitlength, colors)
   pop_state()
   turtle.update()

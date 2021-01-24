@@ -19,7 +19,7 @@ def solve_and_print(input_file):
 
   print('Assignments to values are:')
   for key, value in results:
-    if key <= 'z':
+    if key <= '{':
       print('%s %s' % (key, value))
 
 if __name__ == "__main__":
