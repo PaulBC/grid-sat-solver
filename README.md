@@ -49,7 +49,7 @@ providing a more human-readable specification API that includes:
 - Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
 - Pre-defined Moore neighborhood with compass directions N, NE, E, SE, S, SW, W, NW for neighbors and G (generated)
   for successor state of O (origin)
-- Grid templates can include helper variables. E.g. `stator$ <- G O` would force `stator` true if booth cell and successor
+- Grid templates can include helper variables. E.g. `stator$ <- G O` forces `stator` true if booth cell and successor
   are live. A cardinality bound on stators (one for each cell) could eliminate trivial solutions ($ indicates it
   is part of template and not a single literal).
 - Comments in DIMACS file to provide a map of variable names to numbers as well as echoing
