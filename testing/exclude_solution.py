@@ -1,6 +1,8 @@
 import os
 import sys
 
+# repeat 500 (python3 -m testing.exclude_solution data/tri.dim data/tri.out ; kissat data/tri.dim > data/tri.out ; python -m symsat.fromdimacs --dimacs_in data/tri.dim --dimacs_out data/tri.out --format hex )
+
 input = sys.argv[1]
 solution = sys.argv[2]
 tmp_out = input + '.tmp'
