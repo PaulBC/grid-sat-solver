@@ -8,7 +8,7 @@ from symsat.gridbuilder import *
 from symsat.rulesymmetry import *
 from symsat.solver import *
 from symsat.tags import *
-from symsat.tesselation import *
+from symsat.tessellation import *
 
 RHOMBUS_CONSTRAINTS = parse_lines('''
 # Rhombuses are placed at hex cells with center matching center of upward-pointing triangle.

@@ -3,7 +3,7 @@ import copy
 from .clausebuilder import AbstractLiteral, Literal, ZERO
 from .rulesymmetry import NEIGHBOR_LITERALS, N, NE, E, SE, S, SW, W, NW, G
 from .symbolic_util import clause_to_string, find_variables, is_comment, parse_line
-from .tesselation import RotatedRhombus, RotatedSquare, FlippedRectangle
+from .tessellation import RotatedRhombus, RotatedSquare, FlippedRectangle
 
 class GridNode(AbstractLiteral):
   position = None
@@ -98,19 +98,19 @@ class Strip(object):
     return '%dX%do' % (self.rowsize, self.columnsize)
 
 class Tesselated(object):
-  def __init__(self, tesselation):
-    self.rowsize = tesselation.rowsize
-    self.columnsize = tesselation.columnsize
-    self.tesselation = tesselation
+  def __init__(self, tessellation):
+    self.rowsize = tessellation.rowsize
+    self.columnsize = tessellation.columnsize
+    self.tessellation = tessellation
 
   def to_equivalent(self, i, j):
-    return self.tesselation.to_grid(i, j)
+    return self.tessellation.to_grid(i, j)
 
   def is_outside(self, i, j):
     return False
 
   def __str__(self):
-    return '%dX%d:%s' % (self.rowsize, self.columnsize, self.tesselation.__class__.__name__)
+    return '%dX%d:%s' % (self.rowsize, self.columnsize, self.tessellation.__class__.__name__)
 
 
 class PeriodicTimeAdjust(object):

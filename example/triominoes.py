@@ -3,7 +3,7 @@ import sys
 import turtle
 
 from symsat.gridbuilder import *
-from symsat.tesselation import *
+from symsat.tessellation import *
 from symsat.clausebuilder import *
 from symsat.displayhex import *
 from symsat.rulesymmetry import *

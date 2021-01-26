@@ -15,7 +15,7 @@ from symsat.gridbuilder import Tesselated, Toroidal, Open
 from symsat.rulesymmetry import expand_symmetry, TOTALISTIC, ROTATED_HEX, TOTALISTIC_HEX
 from symsat.solver import set_solver
 from symsat.runsolver import solve_and_print
-from symsat.tesselation import CrossSurface, RotatedSquare, RotatedRhombus
+from symsat.tessellation import CrossSurface, RotatedSquare, RotatedRhombus
 
 if not os.path.exists('data'):
     os.makedirs('data')

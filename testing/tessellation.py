@@ -1,4 +1,4 @@
-from symsat.tesselation import *
+from symsat.tessellation import *
 
 sym = '.O*'
 

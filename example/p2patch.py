@@ -2,7 +2,7 @@ import random
 import sys
 
 from symsat.gridbuilder import *
-from symsat.tesselation import *
+from symsat.tessellation import *
 from symsat.clausebuilder import *
 from symsat.rulesymmetry import *
 from symsat.dimacs_sat import *
