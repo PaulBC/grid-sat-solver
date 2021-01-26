@@ -1,6 +1,7 @@
 # SymSAT: a Python API for grid-based SAT solving
 This repo consists of Python code for creating SAT instances for grid based constraint problems (like Conway's Game of Life oscillators).
-"SymSAT" refers to its use of symmetry and symbols in defining these instances.
+"SymSAT" refers to its use of symmetry and symbols in defining these instances. [This thread](https://www.conwaylife.com/forums/viewtopic.php?f=9&t=5001)
+describes some of the motivation behind it.
 
 
 ## Quick start
