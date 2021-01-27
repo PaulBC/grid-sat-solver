@@ -26,7 +26,7 @@ HEX_CONSTRAINTS.extend(expand_symmetry(TOTALISTIC_HEX, parse_lines('''
   ~G <- NW N E
 ''')))
 
-def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
+def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig, cellsize, randassign):
 
   dimacs_file = fileroot + '.dim'
   symbolic_file = fileroot + '.sym'
@@ -40,9 +40,15 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
   clauses = inflate_grid_template(hex_constraints, grid, G.name)
 
   # add clauses for a cardinality bounds
-  size = equivalence.rowsize * equivalence.rowsize // 2 - 30
+  size = max(equivalence.rowsize * equivalence.rowsize // 2 - 40, 0)
   # clauses.extend(bound_population(grid, LessThanOrEqual, size))
   clauses.extend(bound_population(grid, GreaterThanOrEqual, size))
+
+  # assign some random cells to generate a variety of output
+  for rep in range(randassign):
+    clauses.append((Literal('c_%d_%d_0' %
+                            (random.randint(0, root.equivalence.rowsize - 1),
+                             random.randint(0, root.equivalence.rowsize - 1))),))
 
   # write dimacs file for solver
   with open(dimacs_file, 'w') as out:
@@ -57,9 +63,12 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
   valuegrid = get_value_grid('c', results)
 
   cells = []
-  for i in range(2 * len(valuegrid[0])):
+  adjust = 0
+  if isinstance(equivalence, Tesselated) and isinstance(equivalence.tessellation, FaceCentered):
+    adjust = 2
+  for i in range(2 * len(valuegrid[0]) - adjust):
     row = []
-    for j in range(2 * len(valuegrid[0][0])):
+    for j in range(2 * len(valuegrid[0][0]) - adjust):
       it, jt, _ = root.equivalence.to_equivalent(i, j)
       diagonal = j - i
       if diagonal <= equivalence.rowsize and diagonal > -equivalence.rowsize:
@@ -68,10 +77,22 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
         row.append(None)
     cells.append(row)
 
-  draw_hex_cells(xorig, yorig, cells)
+  draw_hex_cells(xorig, yorig, cells, cellsize)
 
 if __name__ == "__main__":
+  randassign = 0
   if len(sys.argv) > 2:
-    set_solver(sys.argv[2])
-  run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(RotatedRhombus(16)), -250, 250)
+    size = int(sys.argv[2])
+  if len(sys.argv) > 3 and sys.argv[3] == 'face':
+    tessellation = FaceRotatedRhombus
+  else:
+    tessellation = RotatedRhombus
+  if len(sys.argv) > 4:
+    set_solver(sys.argv[4])
+  cellsize = 20
+  if len(sys.argv) > 5:
+    cellsize = int(sys.argv[5])
+  if len(sys.argv) > 6:
+    randassign = int(sys.argv[6])
+  run_hextile(sys.argv[1], HEX_CONSTRAINTS, Tesselated(tessellation(size)), -250, 250, cellsize, randassign)
   input('Press enter to exit.')
