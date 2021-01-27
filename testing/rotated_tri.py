@@ -48,7 +48,7 @@ ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + MISC_CLAUSES
 
 COLORS =  COLORS = ['#4f1111', '#ffffff', '#ffff4f', '#114f11', '#11114f']
 
-def run_triominoes(fileroot, all_clauses, equivalence, xorig, yorig, cellsize):
+def run_triominoes(fileroot, all_clauses, equivalence, xorig, yorig, randassign, cellsize):
 
   dimacs_file = fileroot + '.dim'
   tag_file = fileroot + '.tag'
@@ -61,6 +61,12 @@ def run_triominoes(fileroot, all_clauses, equivalence, xorig, yorig, cellsize):
 
   # create clauses for life rule conditions on grid
   tag_clauses = inflate_grid_template(all_clauses, grid, G.name)
+
+  # assign some random cells to generate a variety of output
+  for rep in range(randassign):
+    tag_clauses.append((Literal('c_%d_%d_0' %
+                                (random.randint(0, root.equivalence.rowsize - 1),
+                                 random.randint(0, root.equivalence.rowsize - 1)), True, 1),))
 
   # expand clauses to booleans
   clauses = expand_tag_clauses(tag_clauses)
@@ -82,12 +88,14 @@ def run_triominoes(fileroot, all_clauses, equivalence, xorig, yorig, cellsize):
   valuegrid = get_value_grid('c', results)
 
   cells = []
-  for i in range(2 * len(valuegrid[0]) - 2):
+  maxj = 8 * len(valuegrid[0][0]) - 2
+  for i in range(4 * len(valuegrid[0]) - 2):
     row = []
-    for j in range(2 * len(valuegrid[0][0]) - 2):
+    for j in range(maxj):
       it, jt, _ = root.equivalence.to_equivalent(i, j)
       diagonal = j - i
-      if diagonal <= root.equivalence.rowsize and diagonal > -root.equivalence.rowsize:
+      if j - i // 2 > 0 and j - i // 2 < maxj // 2:
+      #if diagonal <= root.equivalence.rowsize and diagonal > -root.equivalence.rowsize:
         row.append(valuegrid[0][it][jt])
       else:
         row.append(None)
@@ -101,9 +109,12 @@ if __name__ == '__main__':
   rows = 14
   if len(sys.argv) > 3:
     rows = int(sys.argv[3])
-  cellsize = 20
+  randassign = 0
   if len(sys.argv) > 4:
-    cellsize = int(sys.argv[4])
+    randassign = int(sys.argv[4])
+  cellsize = 20
+  if len(sys.argv) > 5:
+    cellsize = int(sys.argv[5])
 
-  run_triominoes(sys.argv[1], ALL_CLAUSES, Tesselated(FaceRotatedRhombus(rows)), -250, 350, cellsize)
+  run_triominoes(sys.argv[1], ALL_CLAUSES, Tesselated(FaceRotatedRhombus(rows)), -250, 350, randassign, cellsize)
   input('Press enter to exit.')
