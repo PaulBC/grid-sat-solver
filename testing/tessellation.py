@@ -48,6 +48,8 @@ def tostring(i, j, label):
 for i in range(0, 10):
   print(("  " * (10 - i)) + "".join([tostring(*mapper.to_grid(i, j)) for j in range(0, 10)]))
 
+print(sorted(to_label.items()))
+
 print()
 
 mapper = RotatedRhombus(3)
