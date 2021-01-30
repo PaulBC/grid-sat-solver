@@ -83,7 +83,7 @@ print('Found one with 4 stators.')
 wait_for_enter()
 
 print('Solving ad hoc SAT file on boolean literals.')
-file = 'example/boolean_sat.sym'
+file = 'example/knuth_example.sym'
 tmpfile = file.replace('example', 'data')
 copyfile(file, tmpfile)
 print('Input file is %s, which contains:' % file)
