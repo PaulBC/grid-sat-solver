@@ -10,7 +10,7 @@ parser.add_argument('--dimacs_in', required=True, help='DIMACS input file contai
 parser.add_argument('--dimacs_out', required=True, help='DIMACS output file containing solution.')
 parser.add_argument('--format', default='list',
                     choices=['list', 'life', 'hex', 'hex_numeric',
-                             'hex_turtle', 'rhombus_turtle', 'exclude'],
+                             'hex_turtle', 'rhombus_turtle', 'exclude', 'clauses'],
                     help='Format to ouput solution.')
 parser.add_argument('--hex_size', type=int, default=20, help='Size of hex or rhombus for turtle.')
 parser.add_argument('--hex_colors', type=str, default='black,tan', help='Hex colors (comma-separated) for turtle.')
@@ -82,6 +82,12 @@ def output_exclude(results):
   '''Output a symbolic clause in which each literal is a complementary value to solution,
      which can be added to symbolic SAT instance to rule it out.'''
   print(' '.join([str(Literal(name, isinstance(value, bool) and not value,
+                              value if not isinstance(value, bool) else None))
+                  for name, value in results if name <= '{']))
+
+def output_clauses(results):
+  '''Output list of clauses, one per line, each consisting of a single literal value in solution.'''
+  print('\n'.join([str(Literal(name, not isinstance(value, bool) or value,
                               value if not isinstance(value, bool) else None))
                   for name, value in results if name <= '{']))
 
