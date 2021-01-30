@@ -1,7 +1,16 @@
 import os
 import sys
 
-# repeat 500 (python3 -m testing.exclude_solution data/tri.dim data/tri.out ; kissat data/tri.dim > data/tri.out ; python -m symsat.fromdimacs --dimacs_in data/tri.dim --dimacs_out data/tri.out --format hex )
+# A self-contained main program for appending excluded values to DIMACS output.
+
+'''
+(python3 -m symsat.runsolver example/knuth_example.sym
+ repeat 6 (echo "Next solution:"
+           python3 -m symsat.exclude_solution example/knuth_example.sym.dim example/knuth_example.sym.out
+           lingeling example/knuth_example.sym.dim > example/knuth_example.sym.out
+           python3 -m symsat.fromdimacs --dimacs_in example/knuth_example.sym.dim --dimacs_out example/knuth_example.sym.out))
+'''
+
 
 input = sys.argv[1]
 solution = sys.argv[2]
