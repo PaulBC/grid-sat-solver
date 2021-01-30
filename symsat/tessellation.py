@@ -110,6 +110,19 @@ class CenterFlippedRectangle(FlippedRectangle):
     # orientation can be inconsistent, so we don't return it
     return i, j, 0
 
+class DiagonalFlipped(Tessellation):
+  '''Maps square or rhombus to itself flipped on main diagonal.'''
+  def __init__(self, size):
+    super(DiagonalFlipped, self).__init__(size, size)
+
+  def is_transformed(self, i, j):
+    return (i + j) % 2 != 0
+
+  def _transformations(self):
+    return {
+      1: lambda i, j: (j - self.rowsize, i)
+    }
+
 class CrossSurface(Tessellation):
   '''Maps a rectangle to grid boxes as cross-surface (reverse order between boundaries).'''
   def __init__(self, rowsize, columnsize):

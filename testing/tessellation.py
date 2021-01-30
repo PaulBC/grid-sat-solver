@@ -72,3 +72,8 @@ for i in range(0, 10):
   print(("  " * (10 - i)) + "".join([tostring(*mapper.to_grid(i, j)) for j in range(0, 10)]))
 
 print()
+
+mapper = DiagonalFlipped(5)
+
+for i in range(0, 10):
+  print(" ".join(["%d%d" %  mapper.to_grid(i, j)[:2] for j in range(0, 10)]))
