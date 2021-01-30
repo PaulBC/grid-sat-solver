@@ -7,7 +7,8 @@ def parse_line(line):
   '''Parse a line of text with symbols.'''
   line = line.strip()
   if not line or line.startswith('#'):
-    return line[1:]
+    line = line[1:]
+    return line[1:] if line.startswith(' ') else line
   tokens = line.split()
   # if needed, convert 'B <- A0 ... An' to 'B ~AO ... ~An'
   if len(tokens) >= 2 and tokens[1] == IMPLIED_BY:
