@@ -51,7 +51,7 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig):
     output_symbolic(clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32))
+  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32), True)
   valuegrid = get_value_grid('c', results)
 
   cells = []

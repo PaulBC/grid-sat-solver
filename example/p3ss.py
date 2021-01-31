@@ -42,7 +42,7 @@ def run_p3ss(fileroot, life_constraints):
     output_symbolic(clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file)
+  results = solve(dimacs_file, solution_file, None, True)
   valuegrid = get_value_grid('c', results)
 
   print()

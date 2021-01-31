@@ -93,7 +93,7 @@ with open(file) as inp:
 wait_for_enter()
 
 print('Solve using "python -m symsat.runsolver %s"' % file)
-solve_and_print(tmpfile)
+solve_and_print(tmpfile, True)
 wait_for_enter()
 
 print('Solving ad hoc SAT file on literal with tags')
@@ -107,7 +107,7 @@ with open(file) as inp:
 wait_for_enter()
 
 print('Solve using "python -m symsat.runsolver %s"' % file)
-solve_and_print(tmpfile)
+solve_and_print(tmpfile, True)
 wait_for_enter()
 
 HEX_ROTATED_TEMPLATE = '''

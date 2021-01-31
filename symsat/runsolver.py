@@ -2,7 +2,7 @@ import sys
 from .dimacs_sat import parse_line, output_dimacs
 from .solver import solve, set_solver
 
-def solve_and_print(input_file):
+def solve_and_print(input_file, echo=False):
   dimacs_file = input_file + '.dim'
   solution_file = input_file + '.out'
 
@@ -15,7 +15,7 @@ def solve_and_print(input_file):
     output_dimacs(clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file)
+  results = solve(dimacs_file, solution_file, None, echo)
 
   print('Assignments to values are:')
   for key, value in results:
@@ -25,4 +25,4 @@ def solve_and_print(input_file):
 if __name__ == "__main__":
   if len(sys.argv) > 2:
     set_solver(sys.argv[2])
-  solve_and_print(sys.argv[1])
+  solve_and_print(sys.argv[1], True)

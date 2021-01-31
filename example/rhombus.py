@@ -68,7 +68,7 @@ def run_rhombus(fileroot, rhombus_constraints, equivalence, xorig, yorig):
     output_symbolic(tag_clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32))
+  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32), True)
   valuegrid = get_value_grid('c', results)
 
   adjust_back = inverse_adjust(adjust_tag)
