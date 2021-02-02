@@ -19,8 +19,9 @@ def run_solver(input_file, solution_file, seed=None, echo=False):
   with open(solution_file, 'w') as solution:
     args = '--seed=%s ' % seed if seed is not None and SUPPORTS_SEED else ''
     cmd = COMMAND + ' ' + args + input_file
-    print('Running %s' % cmd)
-    print('Writing output to  %s' % solution_file)
+    if echo:
+      print('Running %s' % cmd)
+      print('Writing output to %s' % solution_file)
     solver = os.popen(cmd)
     while True:
       line = solver.readline()
