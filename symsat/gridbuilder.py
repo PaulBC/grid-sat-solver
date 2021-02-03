@@ -227,10 +227,11 @@ def grid_layer(grid, t):
   return filter(lambda x:x.position[2] == t and not x.is_outside(), grid)
 
 def inflate_grid_template(template_constraints, grid, consequent=None,
-                          adjust_tag=lambda orientation, tag: tag):
+                          adjust_tag=lambda orientation, tag: tag,
+                          outside_value=ZERO):
   '''Inflate each template clause using grid cells.'''
   def node_info(node):
-    return (ZERO.name if node.is_outside() else node.name, node.orientation)
+    return ((outside_value or node).name if node.is_outside() else node.name, node.orientation)
 
   # collect auxiliary variables (ending with $) to associate with grid cells.
   auxiliary = list(filter(lambda x: x.endswith('$'), find_variables(template_constraints)))
