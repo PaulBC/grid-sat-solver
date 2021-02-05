@@ -1,5 +1,5 @@
 import re
-from .clausebuilder import Literal
+from .clausebuilder import Literal, ZERO
 
 IMPLIED_BY = '<-'
 
@@ -38,3 +38,30 @@ def find_variables(symbolic_clauses):
       for literal in clause:
         variables.add(literal.name)
   return variables
+
+def inflate_template(template_constraints, substitution_map, consequent=None,
+                     adjust_tag=lambda orientation, tag: tag):
+  '''Inflate each template clause using substitutions.'''
+  # create symbolic clauses for mapped variables using template
+  clauses = []
+  has_zero = False
+  for constraint in template_constraints:
+    if is_comment(constraint):
+      clauses.append(constraint)
+    else:
+      clauses.append('Template: ' + clause_to_string(constraint, consequent))
+      # apply the constraint to each grid cell
+      for substitution in substitution_map:
+        clause = []
+        for literal in constraint:
+          info = substitution.get(literal.name)
+          if info:
+            literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
+          clause.append(literal)
+          if literal.name == ZERO.name:
+            has_zero = True
+        if not (ZERO in clause and ~ZERO in clause):
+          clauses.append(clause)
+  if has_zero:
+    clauses.append([~ZERO])
+  return clauses

@@ -2,7 +2,7 @@ from collections import deque
 import copy
 from .clausebuilder import AbstractLiteral, Literal, ZERO
 from .rulesymmetry import NEIGHBOR_LITERALS, N, NE, E, SE, S, SW, W, NW, G
-from .symbolic_util import clause_to_string, find_variables, is_comment, parse_line
+from .symbolic_util import clause_to_string, find_variables, is_comment, inflate_template, parse_line
 from .tessellation import RotatedRhombus, RotatedSquare, FlippedRectangle
 
 class GridNode(AbstractLiteral):
@@ -238,33 +238,11 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
 
   # map neighbor symbols to names of grid nodes.
   grid_subs = []
-  has_zero = False
   for node in grid:
     grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
     grid_sub[CENTER_CELL.name] = node_info(node)
     for variable in auxiliary:
       grid_sub[variable] = (variable + node.name, node.orientation)
-    if ZERO.name in [name for name, orientation in grid_sub.values()]:
-      has_zero = True
     grid_subs.append(grid_sub)
 
-  # create symbolic clauses for grid nodes using template
-  clauses = []
-  for constraint in template_constraints:
-    if is_comment(constraint):
-      clauses.append(constraint)
-    else:
-      clauses.append('Template: ' + clause_to_string(constraint, consequent))
-      # apply the constraint to each grid cell
-      for grid_sub in grid_subs:
-        clause = []
-        for literal in constraint:
-          info = grid_sub.get(literal.name)
-          if info:
-            literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
-          clause.append(literal)
-        if ZERO not in clause or ~ZERO not in clause:
-          clauses.append(clause)
-  if has_zero:
-    clauses.append([~ZERO])
-  return clauses
+  return inflate_template(template_constraints, grid_subs, consequent, adjust_tag)
