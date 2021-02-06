@@ -11,7 +11,7 @@ from symsat.solver import *
 
 HEX_CONSTRAINTS = expand_symmetry(ROTATED_HEX, parse_lines('''
   # birth on 0
-  G <- ~NW ~N ~E ~SE ~S ~W
+#  G <- ~NW ~N ~E ~SE ~S ~W
   # birth on 2o
    G <- NW N ~E ~SE ~S ~W
   # survival on 2m
@@ -48,7 +48,7 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig, cellsize, 
 
   # add clauses for a cardinality bounds
   size = max(equivalence.rowsize * equivalence.rowsize // 2 - 40, 0)
-  # clauses.extend(bound_population(grid, LessThanOrEqual, size))
+  clauses.extend(bound_population(grid, LessThanOrEqual, size))
   # clauses.extend(bound_population(grid, GreaterThanOrEqual, size))
 
   # assign some random cells to generate a variety of output
@@ -71,7 +71,7 @@ def run_hextile(fileroot, hex_constraints, equivalence, xorig, yorig, cellsize, 
     output_symbolic(clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32))
+  results = solve(dimacs_file, solution_file, None, True)
   valuegrid = get_value_grid('c', results)
 
   cells = []

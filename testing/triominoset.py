@@ -25,7 +25,7 @@ symbolic_file = fileroot + '.sym'
 solution_file = fileroot + '.out'
 
 seen = set()
-n = 5
+n = 4
 for i in range(n):
   for j in range(n):
     for k in range(n):
@@ -41,6 +41,9 @@ for i in range(n):
       literals = tuple(tri_literal(i, j, k) for k in range(n) if k != i and k != j)
       clauses.append(literals)
       used.update(literals)
+
+clauses.append((tri_literal(0, 1, 2),))
+clauses.append((~tri_literal(0, 2, 1),))
 
 clauses.extend(bound_count(sorted(used), LessThanOrEqual, 8))
 
