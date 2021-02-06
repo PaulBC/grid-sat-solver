@@ -48,6 +48,9 @@ providing a more human-readable specification API that includes:
 - ~ and () operators for manipulating literals in Python console.
 - Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
 - Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
+- A template feature for applying a set of constraints (e.g. cellular automata rules or graph coloring rules) to 
+  different combinations of variables through substitution. This is supported explicitly for grid cells but
+  can but used in other ways as well, such as graph adjacency.
 - Pre-defined Moore neighborhood with compass directions N, NE, E, SE, S, SW, W, NW for neighbors and G (generated)
   for successor state of O (origin)
 - Grid templates can include helper variables. E.g. `stator$ <- G O` forces `stator` true if booth cell and successor
