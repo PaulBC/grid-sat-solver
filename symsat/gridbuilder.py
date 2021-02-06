@@ -226,10 +226,8 @@ def grid_layer(grid, t):
   '''Get layer of grid at generation t, not including outside cells.'''
   return filter(lambda x:x.position[2] == t and not x.is_outside(), grid)
 
-def inflate_grid_template(template_constraints, grid, consequent=None,
-                          adjust_tag=lambda orientation, tag: tag,
-                          outside_value=ZERO):
-  '''Inflate each template clause using grid cells.'''
+def grid_substitutions(template_constraints, grid, outside_value=ZERO):
+  '''Returns the substitutions of template variables for a grid mapping.'''
   def node_info(node):
     return ((outside_value or node).name if node.is_outside() else node.name, node.orientation)
 
@@ -245,4 +243,12 @@ def inflate_grid_template(template_constraints, grid, consequent=None,
       grid_sub[variable] = (variable + node.name, node.orientation)
     grid_subs.append(grid_sub)
 
-  return inflate_template(template_constraints, grid_subs, consequent, adjust_tag)
+  return grid_subs
+
+def inflate_grid_template(template_constraints, grid, consequent=None,
+                          adjust_tag=lambda orientation, tag: tag,
+                          outside_value=ZERO):
+  return inflate_template(template_constraints,
+                          grid_substitutions(template_constraints, grid, outside_value),
+                          consequent,
+                          adjust_tag)
