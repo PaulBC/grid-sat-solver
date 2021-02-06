@@ -1,0 +1,31 @@
+# Template variables for edge nodes
+U V
+# Edges of https://mathworld.wolfram.com/Uniquelyk-ColorableGraph.html
+# which is uniquely 3-colorable
+# octagon (a-b-c-d-e-f-g-h)
+a b
+b c
+c d
+d e
+e f
+f g
+g h
+h a
+# octagon spokes
+a e
+b f
+c g
+d h
+# square (c-d-i-j)
+d i
+i j
+j c
+# square (g-h-k-l)
+h k
+k l
+l g
+# cross edges
+j a
+i f
+k b
+l e

@@ -15,6 +15,7 @@ from symsat.gridbuilder import Tesselated, Toroidal, Open
 from symsat.rulesymmetry import expand_symmetry, TOTALISTIC, ROTATED_HEX, TOTALISTIC_HEX
 from symsat.solver import set_solver
 from symsat.runsolver import solve_and_print
+from symsat.runtemplated import solve_template_and_print
 from symsat.tessellation import CrossSurface, RotatedSquare, RotatedRhombus
 
 if not os.path.exists('data'):
@@ -108,6 +109,28 @@ wait_for_enter()
 
 print('Solve using "python -m symsat.runsolver %s"' % file)
 solve_and_print(tmpfile, True)
+wait_for_enter()
+
+print('Solving templated SAT file on literal with tags')
+templatefile = 'example/color.tpl'
+subsfile = 'example/color.sub'
+tmptemplatefile = templatefile.replace('example', 'data')
+copyfile(templatefile, tmptemplatefile)
+tmpsubsfile = subsfile.replace('example', 'data')
+copyfile(subsfile, tmpsubsfile)
+print('Template file is %s, which contains:' % templatefile)
+with open(templatefile) as inp:
+  for line in inp:
+    print(line.rstrip())
+wait_for_enter()
+print('Substitutions file is %s, which contains:' % subsfile)
+with open(subsfile) as inp:
+  for line in inp:
+    print(line.rstrip())
+wait_for_enter()
+
+print('Solve using "python -m symsat.runtemplated %s %s"' % (templatefile, subsfile))
+solve_template_and_print(tmptemplatefile, tmpsubsfile, True)
 wait_for_enter()
 
 HEX_ROTATED_TEMPLATE = '''

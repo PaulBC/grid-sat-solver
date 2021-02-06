@@ -1,10 +1,12 @@
+import os
 import sys
 from .dimacs_sat import parse_line, output_dimacs
 from .solver import solve, set_solver
 
 def solve_and_print(input_file, echo=False):
-  dimacs_file = input_file + '.dim'
-  solution_file = input_file + '.out'
+  input_root = os.path.splitext(input_file)[0]
+  dimacs_file = input_root + '.dim'
+  solution_file = input_root + '.out'
 
   # read clause from input
   with open(input_file) as inp:
