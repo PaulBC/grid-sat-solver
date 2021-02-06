@@ -3,13 +3,19 @@ from .clausebuilder import Literal, ZERO
 
 IMPLIED_BY = '<-'
 
-def parse_line(line):
+def parse_tokens(line):
   '''Parse a line of text with symbols.'''
   line = line.strip()
   if not line or line.startswith('#'):
     line = line[1:]
-    return line[1:] if line.startswith(' ') else line
-  tokens = line.split()
+    return line[1:] if line.startswith(' ') else line, False
+  return line.split(), True
+
+def parse_line(line):
+  '''Parse a line of text with symbols.'''
+  tokens, split = parse_tokens(line)
+  if not split:
+    return tokens
   # if needed, convert 'B <- A0 ... An' to 'B ~AO ... ~An'
   if len(tokens) >= 2 and tokens[1] == IMPLIED_BY:
     return tuple([Literal.parse(tokens[0])] + [~Literal.parse(token) for token in tokens[2:]])
@@ -52,16 +58,19 @@ def inflate_template(template_constraints, substitution_maps, consequent=None,
       clauses.append('Template: ' + clause_to_string(constraint, consequent))
       # apply the constraint to each grid cell
       for substitution in substitution_maps:
-        clause = []
-        for literal in constraint:
-          info = substitution.get(literal.name)
-          if info:
-            literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
-          clause.append(literal)
-          if literal.name == ZERO.name:
-            has_zero = True
-        if not (ZERO in clause and ~ZERO in clause):
-          clauses.append(clause)
+        if is_comment(substitution):
+          clauses.append(substitution)
+        else:
+          clause = []
+          for literal in constraint:
+            info = substitution.get(literal.name)
+            if info:
+              literal = Literal(info[0], literal.value, adjust_tag(info[1], literal.tag))
+            clause.append(literal)
+            if literal.name == ZERO.name:
+              has_zero = True
+          if not (ZERO in clause and ~ZERO in clause):
+            clauses.append(clause)
   if has_zero:
     clauses.append([~ZERO])
   return clauses
@@ -93,7 +102,17 @@ def to_substitution_map(substitution_tuples):
     return (fields[0], 0 if len(fields) == 1 else int(fields[1]))
 
   maps = []
-  keys = substitution_tuples[0]
-  for values in substitution_tuples[1:]:
-    maps.append(dict(zip(keys, [from_string(value) for value in values])))
+  # first find the row with key names for template
+  pos = 0
+  while is_comment(substitution_tuples[pos]):
+    maps.append(substitution_tuples[pos])
+    pos += 1
+  keys = substitution_tuples[pos]
+
+  # now construct maps for remaining non-comment tuples
+  for values in substitution_tuples[pos + 1:]:
+    if is_comment(values):
+      maps.append(values)
+    else:
+      maps.append(dict(zip(keys, [from_string(value) for value in values])))
   return maps

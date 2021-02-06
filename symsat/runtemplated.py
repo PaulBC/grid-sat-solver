@@ -1,8 +1,8 @@
 import os
 import sys
-from .dimacs_sat import parse_line, output_dimacs, output_symbolic
+from .dimacs_sat import output_dimacs, output_symbolic
 from .solver import solve, set_solver
-from .symbolic_util import to_substitution_map, inflate_template
+from .symbolic_util import to_substitution_map, inflate_template, parse_line, parse_tokens
 
 def solve_template_and_print(template_file, substitution_file, echo=False):
   input_root = os.path.splitext(substitution_file)[0] 
@@ -16,9 +16,7 @@ def solve_template_and_print(template_file, substitution_file, echo=False):
 
   # read substitutions from imput
   with open(substitution_file) as substitutions:
-    substitution_map = to_substitution_map([line.split()
-                                           for line in [line.strip() for line in substitutions]
-                                           if line and not line.startswith('#')])
+    substitution_map = to_substitution_map([parse_tokens(line)[0] for line in substitutions])
 
   clauses = inflate_template(template_clauses, substitution_map)
 
