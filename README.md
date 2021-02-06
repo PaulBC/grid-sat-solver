@@ -46,11 +46,11 @@ providing a more human-readable specification API that includes:
 - Integration with SAT solvers to solve instances and translate results back. Currently `lingeling`, `cadical`, and `kissat`
   are supported though any solver that accepts DIMACS format should work.
 - ~ and () operators for manipulating literals in Python console.
-- Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
-- Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
 - A template feature for applying a set of constraints (e.g. cellular automata rules or graph coloring rules) to 
   different combinations of variables through substitution. This is supported for grid cells and
   can be used in other ways as well, such as graph adjacency.
+- Generation of grids with boundary conditions and symmetry (rotated, cross-surface, open with 0-valued boundaries, etc.)
+- Generation of grid constraints (CA rules) with symmetry (rotated, flipped, totalistic, semi-totalistic, etc.)
 - Pre-defined Moore neighborhood with compass directions N, NE, E, SE, S, SW, W, NW for neighbors and G (generated)
   for successor state of O (origin)
 - Grid templates can include helper variables. E.g. `stator$ <- G O` forces `stator` true if booth cell and successor
