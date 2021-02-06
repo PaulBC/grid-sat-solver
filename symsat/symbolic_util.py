@@ -85,13 +85,17 @@ def to_substitution_tuples(substitution_maps):
 
   allkeys = set()
   for mapping in substitution_maps:
-    allkeys.add(tuple(sorted(mapping.keys())))
+    if not is_comment(mapping):
+      allkeys.add(tuple(sorted(mapping.keys())))
   assert len(allkeys) == 1
   keys = next(iter(allkeys))
 
   tuples = []
   for mapping in substitution_maps:
-    tuples.append(tuple(to_string(mapping[key]) for key in keys))
+    if is_comment(mapping):
+      tuples.append(mapping)
+    else:
+      tuples.append(tuple(to_string(mapping[key]) for key in keys))
 
   return [keys] + sorted(tuples)
 
