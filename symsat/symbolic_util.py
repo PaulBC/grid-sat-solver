@@ -75,7 +75,7 @@ def inflate_template(template_constraints, substitution_maps, consequent=None,
     clauses.append([~ZERO])
   return clauses
 
-def to_substitution_tuples(substitution_maps):
+def to_substitution_tuples(substitution_maps, key_order=[]):
   '''Makes a list of string tuples from a set of substitution maps.'''
   def to_string(pair):
    tok = pair[0]
@@ -88,7 +88,10 @@ def to_substitution_tuples(substitution_maps):
     if not is_comment(mapping):
       allkeys.add(tuple(sorted(mapping.keys())))
   assert len(allkeys) == 1
-  keys = next(iter(allkeys))
+  keys = list(next(iter(allkeys)))
+
+  # use given key order with default to original ordering.
+  keys = [key for key in key_order if key in keys] + [key for key in keys if key not in key_order]
 
   tuples = []
   for mapping in substitution_maps:

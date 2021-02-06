@@ -7,6 +7,7 @@ from symsat.clausebuilder import *
 from symsat.rulesymmetry import *
 from symsat.dimacs_sat import *
 from symsat.solver import *
+from symsat.symbolic_util import *
 
 LIFE_CONSTRAINTS = expand_symmetry(TOTALISTIC, parse_lines('''
   # death by loneliness or crowding
@@ -35,6 +36,11 @@ def run_p2patch(fileroot, life_constraints, equivalence, num_stators=0):
   # create clauses for life rule conditions on grid
   clauses = inflate_grid_template(life_constraints, grid, G.name)
 
+  print('# grid substitutions')
+  subs = grid_substitutions(life_constraints, grid)
+  for sub in to_substitution_tuples(subs, 'G O NW N NE E SE S SW W'.split()):
+    print(" ".join(sub))
+
   # add clauses for a cardinality bound of >= 15 in first generation
 #  clauses.extend(bound_population(grid, GreaterThanOrEqual, 8, 0))
 
@@ -55,7 +61,7 @@ def run_p2patch(fileroot, life_constraints, equivalence, num_stators=0):
     output_symbolic(clauses, out)
 
   # solve and print results
-  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32))
+  results = solve(dimacs_file, solution_file, random.randint(1, 1 << 32), True)
   valuegrid = get_value_grid('c', results)
 
   cells = []
