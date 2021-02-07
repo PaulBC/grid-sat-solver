@@ -51,8 +51,10 @@ def inflate_template(template_constraints, substitution_maps, consequent=None,
   # create symbolic clauses for mapped variables using template
   clauses = []
   has_zero = False
+  substituted = set.union(*[set(submap.keys())
+                          for submap in substitution_maps if not is_comment(submap)])
   for constraint in template_constraints:
-    if is_comment(constraint):
+    if is_comment(constraint) or not substituted.intersection([lit.name for lit in constraint]):
       clauses.append(constraint)
     else:
       clauses.append('Template: ' + clause_to_string(constraint, consequent))
