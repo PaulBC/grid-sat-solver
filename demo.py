@@ -182,7 +182,7 @@ run_rhombus('data/rhombus', RHOMBUS_CONSTRAINTS, Tesselated(RotatedRhombus(15)),
 wait_for_enter()
 
 print('Triomino constraints for hex coloring.')
-print('\n'.join(map(str, TRI_TAGS)))
+print(TRI_TAGS)
 print('See example/triominoes.py for more detailed setup.')
 print('Setting up SAT instance and running solver...')
 run_triominoes('data/tri', ALL_CLAUSES, Toroidal(14, 15, -7), -300, 20, 12)

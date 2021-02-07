@@ -45,6 +45,7 @@ NEIGHBOR_LITERALS = parse_line('N NE E SE S SW W NW G')
 # Permutations for constructing symmetry bases (_PERM suffix so they won't be confused with bases)
 ROTATE_CLOCKWISE_PERM = to_mapping([(NE, SE, SW, NW), (N, E, S, W)])
 ROTATE_CLOCKWISE_HEX_PERM = to_mapping([(NW, N, E, SE, S, W)])
+ROTATE_180_HEX_PERM = to_mapping([(NW, SE), (N, S), (E, W)])
 MIX_CORNERS_PERM = to_mapping([(NE, SE)])
 MIX_SIDES_PERM = to_mapping([(N, E)])
 MIX_CORNERS_SIDES_PERM = to_mapping([(NW, N)])
@@ -55,6 +56,7 @@ ROTATE_TRI_ABOVE_PERM = to_mapping([(O, E, N)])
 # Some common symmetry bases
 ROTATED = [ROTATE_CLOCKWISE_PERM]
 ROTATED_HEX = [ROTATE_CLOCKWISE_HEX_PERM]
+ROTATED_180_HEX = [ROTATE_180_HEX_PERM]
 ROTATED_FLIPPED = [ROTATE_CLOCKWISE_PERM, FLIP_DIAGONAL_PERM]
 ROTATED_FLIPPED_HEX = [ROTATE_CLOCKWISE_HEX_PERM, FLIP_DIAGONAL_PERM]
 SEMI_TOTALISTIC = [ROTATE_CLOCKWISE_PERM, MIX_CORNERS_PERM, MIX_SIDES_PERM]

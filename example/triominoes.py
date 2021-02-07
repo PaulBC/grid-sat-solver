@@ -16,23 +16,22 @@ from symsat.tags import *
 # neighborhoods of adjacent triples of hex cells.
 
 # tags for triomino matching
-TRI_TAGS = [
-  (1, 2, 3),
-  (2, 1, 4),
-  (3, 4, 1),
-  (4, 3, 2),
-  (0, 4, 1),
-  (3, 0, 1),
-  (0, 3, 2),
-  (4, 0, 2),
-  (1, 2, 0),
-  (2, 1, 0),
-]
-
-LOWER_MATCHES = expand_symmetry(ROTATED_TRI_BELOW, all_tag_tuples((O, W, S), TRI_TAGS))
-UPPER_MATCHES = expand_symmetry(ROTATED_TRI_ABOVE, all_tag_tuples((O, E, N), TRI_TAGS))
-LOWER_CLAUSES = ['Clauses for lower triomino match'] + make_matching_clauses(LOWER_MATCHES)
-UPPER_CLAUSES = ['Clauses for upper triomino match'] + make_matching_clauses(UPPER_MATCHES)
+TRI_TAGS = '''
+O(1) W(2) S(3)
+O(2) W(1) S(4)
+O(3) W(4) S(1)
+O(4) W(3) S(2)
+O(0) W(4) S(1)
+O(3) W(0) S(1)
+O(0) W(3) S(2)
+O(4) W(0) S(2)
+O(1) W(2) S(0)
+O(2) W(1) S(0)
+'''
+TRI_MATCHES = expand_symmetry(ROTATED_TRI_BELOW, parse_lines(TRI_TAGS))
+# find clauses for matches and rotate 180 degrees to get upper and lower triangles.
+TRI_CLAUSES = expand_symmetry(ROTATED_180_HEX,
+                             ['Clauses for triomino match'] + make_matching_clauses(TRI_MATCHES))
 MISC_CLAUSES = expand_symmetry(ROTATED_HEX, parse_lines('''
   # Do not use 0 label when 3-4 cells in straight line.
   ~W(3) ~O(0) ~E(3)
@@ -41,7 +40,7 @@ MISC_CLAUSES = expand_symmetry(ROTATED_HEX, parse_lines('''
   ~O(0) ~SW(0) ~NE(0) ~NW(2) ~N(1) ~E(2) ~SE(1) ~S(2) ~W(1)
   '''))
 
-ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + MISC_CLAUSES
+ALL_CLAUSES = TRI_CLAUSES + MISC_CLAUSES
 
 COLORS =  COLORS = ['#4f1111', '#ffffff', '#ffff4f', '#114f11', '#11114f']
 
