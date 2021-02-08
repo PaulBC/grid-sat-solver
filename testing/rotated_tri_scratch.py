@@ -44,6 +44,19 @@ TRI_TAGS = [
   (1, 4, 3),
   (2, 3, 4),
 ]
+#tri_0_1_2 tri_0_1_3 tri_0_2_3 tri_0_3_1 tri_0_3_4 tri_0_4_1 tri_1_2_4 tri_1_3_2 tri_1_4_2 tri_1_4_3
+TRI_TAGS = [
+  (0, 1, 2),
+  (0, 1, 3),
+  (0, 2, 3),
+  (0, 3, 1),
+  (0, 3, 4),
+  (0, 4, 1),
+#  (1, 2, 4),
+  (1, 3, 2),
+#  (1, 4, 2),
+  (1, 4, 3),
+]
 
 LOWER_MATCHES = expand_symmetry(ROTATED_TRI_BELOW, all_tag_tuples((O, W, S), TRI_TAGS))
 UPPER_MATCHES = expand_symmetry(ROTATED_TRI_ABOVE, all_tag_tuples((O, E, N), TRI_TAGS))
@@ -55,7 +68,8 @@ MISC_CLAUSES = expand_symmetry(ROTATED_HEX, parse_lines('''
   #~W(4) ~O(0) ~E(4)
   # Rule out trivial 0-1-2 coloring
   #~O(0) ~SW(0) ~NE(0) ~NW(2) ~N(1) ~E(2) ~SE(1) ~S(2) ~W(1)
-  ~O(4) ~SW(4) ~NE(4) ~NW(2) ~N(1) ~E(2) ~SE(1) ~S(2) ~W(1)
+  #~O(4) ~SW(4) ~NE(4) ~NW(2) ~N(1) ~E(2) ~SE(1) ~S(2) ~W(1)
+  #~O(0) ~SW(0) ~NE(0) ~NW(3) ~N(1) ~E(3) ~SE(1) ~S(3) ~W(1)
   '''))
 
 ALL_CLAUSES = LOWER_CLAUSES + UPPER_CLAUSES + MISC_CLAUSES
@@ -126,7 +140,10 @@ def run_triominoes(fileroot, all_clauses, equivalence, xorig, yorig, randassign,
       it, jt, _ = root.equivalence.to_equivalent(i, j)
       diagonal = j - i
       if diagonal <= equivalence.rowsize and diagonal > -equivalence.rowsize:
-        row.append(valuegrid[0][it][jt])
+        try:
+          row.append(valuegrid[0][it][jt])
+        except:
+          row.append(None)
       else:
         row.append(None)
     cells.append(row)
@@ -146,6 +163,7 @@ if __name__ == '__main__':
   if len(sys.argv) > 5:
     cellsize = int(sys.argv[5])
 
+  run_triominoes(sys.argv[1], ALL_CLAUSES, Open(rows, rows), -250, 350, randassign, cellsize)
   #run_triominoes(sys.argv[1], ALL_CLAUSES, Toroidal(rows, rows, -rows//2), -250, 350, randassign, cellsize)
-  run_triominoes(sys.argv[1], ALL_CLAUSES, Tesselated(FaceRotatedRhombus(rows)), -250, 350, randassign, cellsize)
+  #run_triominoes(sys.argv[1], ALL_CLAUSES, Tesselated(FaceRotatedRhombus(rows)), -250, 350, randassign, cellsize)
   input('Press enter to exit.')
