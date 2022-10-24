@@ -1,5 +1,6 @@
 from collections import deque
 import copy
+import re
 from .clausebuilder import AbstractLiteral, Literal, ZERO
 from .rulesymmetry import NEIGHBOR_LITERALS, N, NE, E, SE, S, SW, W, NW, G
 from .symbolic_util import clause_to_string, find_variables, is_comment, inflate_template, parse_line
@@ -140,8 +141,17 @@ MOORE_DISPLACEMENTS = {k.name: v for k, v in {
   NW: (-1, -1)
 }.items()}
 
+DELTA_RE = re.compile('O([+-][0-9]+)([+-][0-9]+)')
+
+def displacement(symbol):
+  m = DELTA_RE.match(symbol)
+  if m:
+    return int(m.group(1)), int(m.group(2))
+  else:
+    return MOORE_DISPLACEMENTS[symbol]
+
 # get neighbor symbols as strings.
-NEIGHBOR_SYMBOLS = [literal.name for literal in  NEIGHBOR_LITERALS]
+NEIGHBOR_SYMBOLS = [literal.name for literal in NEIGHBOR_LITERALS]
 
 class MooreGridNode(GridNode):
   def __init__(self, position, equivalence, timeadjust=PeriodicTimeAdjust(1)):
@@ -158,7 +168,7 @@ class MooreGridNode(GridNode):
     if symbol == G.name:
       i, j, t = self.timeadjust.adjust(i, j, t + 1)
     else:
-      di, dj = MOORE_DISPLACEMENTS[symbol]
+      di, dj = displacement(symbol)
       i += di
       j += dj
     return self.make_node(i, j, t)
@@ -226,7 +236,7 @@ def grid_layer(grid, t):
   '''Get layer of grid at generation t, not including outside cells.'''
   return filter(lambda x:x.position[2] == t and not x.is_outside(), grid)
 
-def grid_substitutions(template_constraints, grid, outside_value=ZERO):
+def grid_substitutions(template_constraints, grid, neighbor_symbols, outside_value=ZERO):
   '''Returns the substitutions of template variables for a grid mapping.'''
   def node_info(node):
     return ((outside_value or node).name if node.is_outside() else node.name, node.orientation)
@@ -237,7 +247,7 @@ def grid_substitutions(template_constraints, grid, outside_value=ZERO):
   # map neighbor symbols to names of grid nodes.
   grid_subs = []
   for node in grid:
-    grid_sub = {sym: node_info(node.neighbor(sym)) for sym in node.neighbor_symbols()}
+    grid_sub = {sym: node_info(node.neighbor(sym)) for sym in neighbor_symbols}
     grid_sub[CENTER_CELL.name] = node_info(node)
     for variable in auxiliary:
       grid_sub[variable] = (variable + node.name, node.orientation)
@@ -248,7 +258,17 @@ def grid_substitutions(template_constraints, grid, outside_value=ZERO):
 def inflate_grid_template(template_constraints, grid, consequent=None,
                           adjust_tag=lambda orientation, tag: tag,
                           outside_value=ZERO):
+  neighbor_symbols = all_neighbor_symbols(template_constraints)
   return inflate_template(template_constraints,
-                          grid_substitutions(template_constraints, grid, outside_value),
+                          grid_substitutions(template_constraints,
+                                             grid, neighbor_symbols, outside_value),
                           consequent,
                           adjust_tag)
+
+def all_neighbor_symbols(template_constraints):
+  neighbors = set()
+  for constraint in template_constraints:
+    if not is_comment(constraint):
+      names = [literal.name for literal in constraint]
+      neighbors.update([name for name in names if name in NEIGHBOR_SYMBOLS or DELTA_RE.match(name)])
+  return neighbors
