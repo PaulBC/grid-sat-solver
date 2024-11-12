@@ -189,7 +189,7 @@ run_triominoes('data/tri', ALL_CLAUSES, Toroidal(14, 15, -7), -300, 20, 12)
 wait_for_enter()
 
 print()
-print('Demo is complete. See data/ directory for generated files.')
+print('Demo is complete.  See data/ directory for generated files.')
 
 # Just keep pictures up for a little while in case user hit return too many times
 time.sleep(5)
